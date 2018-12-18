@@ -1,50 +1,57 @@
-package sd1819;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 
 public class Servidor {
-    private String nome;
-    private double taxa;
-    private int id;
-    private boolean ocupado;
 
-    public Servidor(String nome, double taxa, int id, boolean ocupado) {
-        this.nome = nome;
-        this.taxa = taxa;
-        this.id = id;
-        this.ocupado = ocupado;
+    private int porta;
+    private int nClients;
+    ServidoresCloud servidoresCloud;
+    Utilizadores utilizadores;
+
+    public Servidor(int porta){
+        this.porta = porta;
+        this.nClients = 0;
+        this.servidoresCloud =new ServidoresCloud();
+        this.utilizadores=new Utilizadores();
+
     }
 
-    public String getNome() {
-        return nome;
+    public void comecaServidor(){
+
+        try {
+            ServerSocket serverSocket = new ServerSocket(porta);
+
+            System.out.println("=================SERVER====================");
+
+            while (true) {
+
+                System.out.println("À espera de conexão....");
+
+                Socket clSocket = serverSocket.accept();
+
+                TratarCliente tratarCliente = new TratarCliente(clSocket,this.servidoresCloud,this.utilizadores);
+
+                Thread tratarClienteThread = new Thread(tratarCliente);
+
+                tratarClienteThread.setName("Cliente "+(this.nClients+1));
+
+                this.nClients++; // para fazer print
+
+                tratarClienteThread.start();
+
+            }
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public double getTaxa() {
-        return taxa;
-    }
+    public static void main(String [] args){
 
-    public int getId() {
-        return id;
+        int porta = 12345;
+        Servidor servidor = new Servidor(porta);
+        servidor.comecaServidor();
     }
-
-    public boolean isOcupado() {
-        return ocupado;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setTaxa(double taxa) {
-        this.taxa = taxa;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setOcupado(boolean ocupado) {
-        this.ocupado = ocupado;
-    }
-    
-    
-    
 }

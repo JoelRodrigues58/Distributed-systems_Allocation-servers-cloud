@@ -1,15 +1,12 @@
-package sd1819;
-
 import java.util.HashMap;
 
 public class Utilizadores {
-    
     private HashMap<String,Utilizador> utilizadores;
 
     public Utilizadores() {
         this.utilizadores = new HashMap<String,Utilizador>();
     }
-    
+
     public boolean registar(String email,String password){
         if(this.utilizadores.isEmpty() || !this.utilizadores.containsKey(email)){
             Utilizador utilizador = new Utilizador(password,email,0.0);
@@ -18,7 +15,7 @@ public class Utilizadores {
         }
         else return false;
     }
-   
+
     public boolean autenticar(String email, String password){
         if(this.utilizadores.isEmpty() || !this.utilizadores.containsKey(email)){
             return false;
@@ -30,9 +27,13 @@ public class Utilizadores {
             else return false;
         }
     }
-    
+
+    public void adicionarReservas(String email, String reserva){
+        this.utilizadores.get(email).adicionarReserva(reserva);
+    }
+
     public double consultarConta(String email){
         return this.utilizadores.get(email).getMontante();
     }
-    
+
 }
