@@ -1,3 +1,5 @@
+package negocio;
+
 public class ServidorCloud {
     private String nome;
     private double taxaFixa;

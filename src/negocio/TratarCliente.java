@@ -1,3 +1,5 @@
+package negocio;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -32,8 +34,9 @@ public class TratarCliente implements Runnable {
                 if(!this.autenticado) {
 
                     String[] msg = clientM.split(" ");
-
+                    System.out.println(msg[0]);
                     int escolha = Integer.parseInt(msg[0]);
+                    
 
                     switch (escolha) {
                         case 1:
@@ -84,7 +87,11 @@ public class TratarCliente implements Runnable {
                     String idReserva;
 
                     switch (escolha){
-
+                        case -1:
+                            System.out.println("Tirou autenticacao.");
+                            this.autenticado=false;
+                            break;
+                            
                         case 1:
                             String nomeServidor = msgAut[1];
 
@@ -104,8 +111,18 @@ public class TratarCliente implements Runnable {
 
                         case 2:
                             nomeServidor = msgAut[1];
-
                             idReserva = this.servidoresCloud.reservarPedido(nomeServidor);
+                            
+                            break;
+                            
+                        case 3:
+                            String disponiveis = this.servidoresCloud.consultarDisponiveis();
+                            out.write(disponiveis);
+                            out.newLine();
+                            out.flush();
+                            System.out.println("O servidor respondeu: " + disponiveis);
+                            break;
+    
                     }
 
                 }

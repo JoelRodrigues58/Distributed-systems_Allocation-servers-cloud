@@ -1,3 +1,5 @@
+package negocio;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -118,8 +120,7 @@ public class ServidoresCloud {
                     if(servidorCloud.isLeilao()) nLeiloes++;
                 }
             }
-            stringBuilder.append("Nome do Servidor: "+ nome +", Nº de disponíveis = "+ nDisponiveis +"," +
-                    " Nº de reservas a leilão = "+ nLeiloes +"\n");
+            stringBuilder.append("-"+nome +" "+ nDisponiveis +" " + nLeiloes);
         }
 
         return stringBuilder.toString();
