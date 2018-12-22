@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package apresentacao;
 
 import java.io.IOException;
@@ -11,15 +6,10 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import negocio.ServidorProxy;
 
-/**
- *
- * @author JoelRodrigues
- */
 public class Login extends javax.swing.JFrame {
     private static ServidorProxy proxy;
-    /**
-     * Creates new form MenuLogin
-     */
+
+    
     public Login(ServidorProxy proxy) {
         this.setLocationRelativeTo(null);
         this.proxy=proxy;

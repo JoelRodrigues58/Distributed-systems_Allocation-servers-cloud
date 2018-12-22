@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package apresentacao;
 
 import java.awt.BorderLayout;
@@ -10,15 +6,12 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import javafx.scene.control.ScrollPane;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import negocio.ServidorProxy;
 
-/**
- *
- * @author JoelRodrigues
- */
 public class Servidores extends javax.swing.JFrame {
     private static ServidorProxy proxy;
     private static String email;
@@ -31,7 +24,7 @@ public class Servidores extends javax.swing.JFrame {
         this.proxy=proxy;
         this.email=email;
         this.servidoresDisponiveis=servidoresDisponiveis;
-        myinicComponents();
+        myInitComponents();
         initComponents();
     }
 
@@ -46,6 +39,7 @@ public class Servidores extends javax.swing.JFrame {
 
         label4 = new javax.swing.JLabel();
         label5 = new javax.swing.JLabel();
+        sair = new javax.swing.JButton();
 
         label4.setFont(new java.awt.Font("Myanmar Sangam MN", 3, 48)); // NOI18N
         label4.setText("Gestão de Servidores");
@@ -57,6 +51,14 @@ public class Servidores extends javax.swing.JFrame {
         label5.setText("Gestão de Servidores");
         label5.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
+        sair.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        sair.setText("Sair");
+        sair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sairActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -65,19 +67,32 @@ public class Servidores extends javax.swing.JFrame {
                 .addGap(50, 50, 50)
                 .addComponent(label5)
                 .addContainerGap(55, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sair, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(label5)
-                .addContainerGap(343, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
+                .addComponent(sair, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void myinicComponents(){
+    private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
+        // TODO add your handling code here:
+        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email);
+        menuprincipal.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_sairActionPerformed
+
+    private void myInitComponents(){
       String[] nomesColunas = {"Servidor", "Nº Disponíveis", "Nº Leilões"};
       String[] s_disponiveis  = servidoresDisponiveis.split("-");
       String[][] dados= new String[s_disponiveis.length][3];  
@@ -88,12 +103,18 @@ public class Servidores extends javax.swing.JFrame {
        }
         
         DefaultTableModel listTableModel = new DefaultTableModel(dados, nomesColunas);
-        
         JTable listTable = new JTable(listTableModel);
-        listTable.setSize(100, 100);
-        listTable.setLocation(100, 100);
-        this.add(listTable);
+        listTable.setEnabled(false);
+        JScrollPane scrollPane = new JScrollPane(listTable);
+        
+        JPanel panel = new JPanel();
+        panel.setLocation(50, 100);
+        panel.setSize(450, 200);
+        panel.add(scrollPane);
+        this.getContentPane().setLayout(null);
+        this.getContentPane().add(panel, BorderLayout.CENTER);
         this.pack();
+
     }
     
     /**
@@ -134,5 +155,6 @@ public class Servidores extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel label4;
     private javax.swing.JLabel label5;
+    private javax.swing.JButton sair;
     // End of variables declaration//GEN-END:variables
 }

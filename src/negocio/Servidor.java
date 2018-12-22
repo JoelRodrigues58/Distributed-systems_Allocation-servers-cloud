@@ -25,6 +25,7 @@ public class Servidor {
         this.servidoresCloud.registarServidor("server1", 10.0, 5.0);
         this.servidoresCloud.registarServidor("server2", 15.0, 6.0);
         this.servidoresCloud.registarServidor("server3", 20.0, 7.0);
+        this.servidoresCloud.registarServidor("server1",10.0,1.0);
         
         try {
             ServerSocket serverSocket = new ServerSocket(porta);

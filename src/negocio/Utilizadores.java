@@ -1,5 +1,6 @@
 package negocio;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Utilizadores {
@@ -37,5 +38,20 @@ public class Utilizadores {
     public double consultarConta(String email){
         return this.utilizadores.get(email).getMontante();
     }
-
+    
+    public Double depositarDinheiro(String email,Double montante_inserido){
+        Double saldo_anterior= this.utilizadores.get(email).getMontante();
+        Double saldo_atual = Double.sum(saldo_anterior,montante_inserido);
+        this.utilizadores.get(email).setMontante(saldo_atual);
+        return saldo_atual;
+    }
+    
+    public String consultarReservas(String email){
+        StringBuilder res = new StringBuilder();
+        ArrayList<String> reservas = this.utilizadores.get(email).getReservas();
+        for(String s : reservas){
+            res.append("-"+s);
+        }
+        return res.toString();
+    }
 }

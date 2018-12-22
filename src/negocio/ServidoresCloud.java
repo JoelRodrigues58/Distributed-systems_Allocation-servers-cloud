@@ -36,15 +36,20 @@ public class ServidoresCloud {
     public String reservarPedido(String nomeServidor){
 
         ArrayList<ServidorCloud> servidorClouds = this.servidores.get(nomeServidor);
-
-        for(ServidorCloud servidorCloud : servidorClouds){
-            if(!servidorCloud.isOcupado()) {
-                servidorCloud.setOcupado(true);
-                return  nomeServidor+" "+servidorCloud.getId();
+        
+        if(servidorClouds!=null){
+            for(ServidorCloud servidorCloud : servidorClouds){
+                if(!servidorCloud.isOcupado()) {
+                    servidorCloud.setOcupado(true);
+                    System.out.println("fefefe");
+                    return  nomeServidor+" "+servidorCloud.getId();
+                }
             }
+            return "TodosServidoresIndisponiveis";
         }
-
-        return  null;
+        else{
+            return "ServidorInexistente";
+        }
 
     }
 
@@ -58,6 +63,7 @@ public class ServidoresCloud {
                 tentouLicitar = true;
                 licitMin = servidorCloud.getLicitacaoMinima();
                 if(licitacao >= licitMin) {
+                    servidorCloud.setTaxaLeiloada(licitacao);
                     servidorCloud.setLeilao(true);
                     servidorCloud.setOcupado(true);
                     return nomeServidor+" "+servidorCloud.getId();
