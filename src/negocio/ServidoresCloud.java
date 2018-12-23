@@ -41,7 +41,6 @@ public class ServidoresCloud {
             for(ServidorCloud servidorCloud : servidorClouds){
                 if(!servidorCloud.isOcupado()) {
                     servidorCloud.setOcupado(true);
-                    System.out.println("fefefe");
                     return  nomeServidor+" "+servidorCloud.getId();
                 }
             }
@@ -131,7 +130,21 @@ public class ServidoresCloud {
 
         return stringBuilder.toString();
     }
+    
+    public double taxaServidor(String nomeServidor){
+        return this.servidores.get(nomeServidor).get(0).getTaxaFixa();
+    }
 
-
+    public void desocupaServidor(String nomeServidor,int id){
+        ArrayList<ServidorCloud> servidores = this.servidores.get(nomeServidor);
+        for(ServidorCloud sC : servidores){
+            if(sC.isLeilao() && sC.getId()==id){
+                sC.setLeilao(false);
+                sC.setOcupado(false);
+            }else if(sC.getId()==id){
+                sC.setOcupado(false);
+            }
+        }
+    }
 
 }

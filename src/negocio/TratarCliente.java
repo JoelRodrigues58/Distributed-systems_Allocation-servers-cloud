@@ -46,6 +46,7 @@ public class TratarCliente implements Runnable {
                             if (registo) {
                                 serverM = "Ok";
                                 this.autenticado = true;
+                               
                             } else serverM = "Not Ok";
 
                             out.write(serverM);
@@ -89,22 +90,39 @@ public class TratarCliente implements Runnable {
                         case -1:
                             //Tirar autenticacao
                             this.autenticado=false;
+                            this.utilizadores.tirarAutenticacao(email);
                             break;
                             
                         case 1:
                             //Reserva a pedido
                             String nomeServidor = msgAut[1];
-
+                            
+                            if(this.utilizadores.getSaldoCliente(email)>0){
                             idReserva = this.servidoresCloud.reservarPedido(nomeServidor);
 
-                            if(idReserva!=null && !idReserva.equals("ServidorInexistente") && !idReserva.equals("TodosServidoresIndisponiveis")) {
-                                this.utilizadores.adicionarReservas(email,idReserva);
-                                serverM = "Ok";
-                            }else if(idReserva!=null && idReserva.equals("TodosServidoresIndisponiveis")){
-                                serverM= "TodosServidoresIndisponiveis";
+                                if(idReserva!=null && !idReserva.equals("ServidorInexistente") && !idReserva.equals("TodosServidoresIndisponiveis")) {
+                                    this.utilizadores.adicionarReservas(email,idReserva);
+
+                                  Thread descontarSaldo = new Thread(
+                                    new DescontaSaldo(
+                                            this.utilizadores,
+                                            email,
+                                            this.servidoresCloud.taxaServidor(nomeServidor),
+                                            servidoresCloud,
+                                            nomeServidor,
+                                            idReserva)
+                                  );
+
+                                    descontarSaldo.start();
+                                    serverM = "Ok";
+
+                                }else if(idReserva!=null && idReserva.equals("TodosServidoresIndisponiveis")){
+                                    serverM= "TodosServidoresIndisponiveis";
+                                }
+                                else serverM="ServidorInexistente";
                             }
-                            else serverM="ServidorInexistente";
-       
+                            else serverM="DinheiroInsuficiente";
+                            
                             out.write(serverM);
                             out.newLine();
                             out.flush();
@@ -152,7 +170,9 @@ public class TratarCliente implements Runnable {
                             out.flush();
                             System.out.println("O servidor respondeu: "+ reservas);
                             break;
-                            
+                        case 8:
+                            //Cancelar reserva
+                            break;
                         default:
                             break;
                     }

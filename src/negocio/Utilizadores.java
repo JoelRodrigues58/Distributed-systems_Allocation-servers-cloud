@@ -20,11 +20,12 @@ public class Utilizadores {
     }
 
     public boolean autenticar(String email, String password){
-        if(this.utilizadores.isEmpty() || !this.utilizadores.containsKey(email)){
+        if(this.utilizadores.isEmpty() || !this.utilizadores.containsKey(email) || this.utilizadores.get(email).isAutenticado()){
             return false;
         }
         else {
             if(this.utilizadores.get(email).getPassword().equals(password)){
+                this.utilizadores.get(email).setAutenticado(true);
                 return true;
             }
             else return false;
@@ -53,5 +54,34 @@ public class Utilizadores {
             res.append("-"+s);
         }
         return res.toString();
+    }
+    
+    public void tirarAutenticacao(String email){
+        this.utilizadores.get(email).setAutenticado(false);
+    }
+    
+    public double descontarSaldo(String email,double taxa){
+        double saldo_atual = this.utilizadores.get(email).getMontante();
+        double saldo_final =Double.sum(saldo_atual,-taxa);
+        if(saldo_final>=0){
+            System.out.println("A descontar: " + taxa);
+            this.utilizadores.get(email).setMontante(saldo_final);
+        }else{
+            System.out.println("A descontar: "+ saldo_atual);
+            this.utilizadores.get(email).setMontante(0.0);
+        }
+        return saldo_final;
+    } 
+    
+    public void retiraReserva(String email, String idReserva){
+        ArrayList<String> reservas = this.utilizadores.get(email).getReservas();
+        
+        for(String res : reservas){
+            if(res.equals(idReserva)) reservas.remove(res);
+        }
+    }
+    
+    public double getSaldoCliente(String email){
+        return this.utilizadores.get(email).getMontante();
     }
 }

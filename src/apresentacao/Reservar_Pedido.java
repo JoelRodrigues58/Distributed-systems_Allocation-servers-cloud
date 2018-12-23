@@ -158,6 +158,9 @@ public class Reservar_Pedido extends javax.swing.JFrame {
                 }else if(resposta.equals("ServidorInexistente")){
                     JOptionPane.showMessageDialog(null, "Insira um tipo de servidor correto.");
                     this.tipo_servidor.setText("");
+                }else if(resposta.equals("DinheiroInsuficiente")){
+                    JOptionPane.showMessageDialog(null, "Não tem saldo suficiente para efetuar a reserva.");
+                    this.tipo_servidor.setText("");
                 }
                 else{
                     //FAZER O QUE FALTA

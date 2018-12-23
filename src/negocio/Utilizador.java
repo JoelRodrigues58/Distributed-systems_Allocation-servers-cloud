@@ -6,6 +6,7 @@ public class Utilizador {
     private String password;
     private String email;
     private double montante;
+    private boolean autenticado;
     private ArrayList<String> reservas;
 
     public Utilizador(String password, String email, double montante) {
@@ -13,8 +14,17 @@ public class Utilizador {
         this.email = email;
         this.montante = montante;
         this.reservas=new ArrayList<String>();
+        this.autenticado=false;
     }
 
+    public boolean isAutenticado() {
+        return autenticado;
+    }
+
+    public void setAutenticado(boolean autenticado) {
+        this.autenticado = autenticado;
+    }
+    
     public String getPassword() {
         return password;
     }
