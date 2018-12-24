@@ -3,7 +3,7 @@ package negocio;
 public class ServidorCloud {
     private String nome;
     private double taxaFixa;
-    private double taxaLeiloada;
+    private double taxaLeiloada; //TIRAR???
     private double licitacaoMinima;
     private int id;
     private boolean ocupado;

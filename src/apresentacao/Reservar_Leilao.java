@@ -1,4 +1,8 @@
 package apresentacao;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import negocio.ServidorProxy;
 
 
@@ -79,7 +83,7 @@ public class Reservar_Leilao extends javax.swing.JFrame {
 
         email_logado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel2.setText("Licitação Mínima:");
+        jLabel2.setText("Licitação:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -167,8 +171,45 @@ public class Reservar_Leilao extends javax.swing.JFrame {
     }//GEN-LAST:event_tipo_servidorActionPerformed
 
     private void reserva_leilaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserva_leilaoActionPerformed
-        // TODO add your handling code here:
-        // TODO add your handling code here:
+        String servidor_escolhido = this.tipo_servidor.getText();
+        String licitacao_escolhida = this.licitacao.getText();
+        
+        if(servidor_escolhido.length()!=0 && licitacao_escolhida.length()!=0){
+            try{
+               Double.parseDouble(licitacao_escolhida);
+               String resultado = this.proxy.servidorLeilao("2", servidor_escolhido,licitacao_escolhida);
+               
+               if(resultado.equals("ServidoresOcupados")){
+                    JOptionPane.showMessageDialog(null, "Servidor ocupado. A sua proposta foi registada.");
+                    this.licitacao.setText("");
+                    this.tipo_servidor.setText("");
+               }else if(resultado.equals("ServidorInexistente")){
+                    JOptionPane.showMessageDialog(null, "Insira um tipo de servidor correto.");
+                    this.licitacao.setText("");
+                    this.tipo_servidor.setText("");
+               }else if(resultado.equals("LicitacaoBaixa")){
+                    JOptionPane.showMessageDialog(null, "A sua licitação é inferior à taxa miníma exigida pelo servidor.");
+                    this.licitacao.setText("");
+               }else if(resultado.equals("SaldoInsuficiente")){
+                   JOptionPane.showMessageDialog(null, "Não tem saldo suficiente para efetuar essa proposta.");
+                   this.licitacao.setText("");
+               }
+               else {
+                    JOptionPane.showMessageDialog(null, "Servidor reservado com sucesso!");
+                    this.tipo_servidor.setText("");
+                    this.licitacao.setText("");
+               }
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Insira uma licitação válida.");
+                this.tipo_servidor.setText("");
+            } catch (IOException ex) {
+                Logger.getLogger(Reservar_Leilao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos.");
+            this.licitacao.setText("");
+            this.tipo_servidor.setText("");
+        }
       
     }//GEN-LAST:event_reserva_leilaoActionPerformed
 

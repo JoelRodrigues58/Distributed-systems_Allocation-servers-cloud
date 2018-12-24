@@ -48,7 +48,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(550, 400));
 
         label4.setFont(new java.awt.Font("Myanmar Sangam MN", 3, 48)); // NOI18N
         label4.setText("Gestão de Servidores");
@@ -67,6 +66,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jLabel6.setText("Depositar montante");
 
         consultarPropostas.setText("click");
+        consultarPropostas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                consultarPropostasActionPerformed(evt);
+            }
+        });
 
         saldo.setText("click");
         saldo.addActionListener(new java.awt.event.ActionListener() {
@@ -285,6 +289,13 @@ public class MenuPrincipal extends javax.swing.JFrame {
             Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_reservasActionPerformed
+
+    private void consultarPropostasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarPropostasActionPerformed
+        // TODO add your handling code here:
+        ConsultarPropostas consultarpropostas = new ConsultarPropostas(proxy,email);
+        consultarpropostas.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_consultarPropostasActionPerformed
 
     /**
      * @param args the command line arguments

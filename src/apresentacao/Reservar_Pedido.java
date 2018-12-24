@@ -100,7 +100,7 @@ public class Reservar_Pedido extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(email_logado, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(label4))))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,9 +163,8 @@ public class Reservar_Pedido extends javax.swing.JFrame {
                     this.tipo_servidor.setText("");
                 }
                 else{
-                    //FAZER O QUE FALTA
                     JOptionPane.showMessageDialog(null, "Servidor reservado com sucesso!");
-                     this.tipo_servidor.setText("");
+                    this.tipo_servidor.setText("");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Reservar_Pedido.class.getName()).log(Level.SEVERE, null, ex);

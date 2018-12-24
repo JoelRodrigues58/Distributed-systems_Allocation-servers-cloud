@@ -55,27 +55,32 @@ public class ServidoresCloud {
     public String reservarLeilao(String nomeServidor, String email, double licitacao){
 
         ArrayList<ServidorCloud> servidorClouds = this.servidores.get(nomeServidor);
-        double licitMin;
-        boolean tentouLicitar = false;
-        for(ServidorCloud servidorCloud : servidorClouds){
-            if(!servidorCloud.isOcupado()) {
-                tentouLicitar = true;
-                licitMin = servidorCloud.getLicitacaoMinima();
-                if(licitacao >= licitMin) {
-                    servidorCloud.setTaxaLeiloada(licitacao);
-                    servidorCloud.setLeilao(true);
-                    servidorCloud.setOcupado(true);
-                    return nomeServidor+" "+servidorCloud.getId();
+        
+        if(servidorClouds!=null){
+            double licitMin;
+            boolean tentouLicitar = false;
+            for(ServidorCloud servidorCloud : servidorClouds){
+                if(!servidorCloud.isOcupado()) {
+                    tentouLicitar = true;
+                    licitMin = servidorCloud.getLicitacaoMinima();
+                    if(licitacao >= licitMin) {
+                        servidorCloud.setTaxaLeiloada(licitacao);
+                        servidorCloud.setLeilao(true);
+                        servidorCloud.setOcupado(true);
+                        return nomeServidor+" "+servidorCloud.getId();
+                    }
                 }
             }
-        }
 
-        if(!tentouLicitar) {
-            registarProposta(nomeServidor,email,licitacao);
-            return "ServidoresOcupados";
-        }
+            if(!tentouLicitar) {
+                System.out.println("ENTREI");
+                registarProposta(nomeServidor,email,licitacao);
+                return "ServidoresOcupados";
+            }
 
-        return  "LicitacaoBaixa";
+            return  "LicitacaoBaixa";
+        }
+        else return "ServidorInexistente";
     }
 
     public void registarProposta(String nomeServidor, String email, double licitacao){
@@ -145,6 +150,23 @@ public class ServidoresCloud {
                 sC.setOcupado(false);
             }
         }
+    }
+    
+    public String propostasPorServidor(String nomeServidor){
+        StringBuilder res = new StringBuilder();
+        ArrayList<Proposta> propostas = this.propostas.get(nomeServidor);
+        ArrayList<ServidorCloud> servidores = this.servidores.get(nomeServidor);
+        
+        if(propostas!=null && servidores!=null){
+            for(Proposta p : propostas){
+                res.append("-"+p.getLicitacao() + " " + p.getEmail());
+            }
+        }else if(servidores!=null){
+            return "Naohapropostas";
+            
+        }else return "ServidorInexistente";
+        
+        return res.toString();
     }
 
 }

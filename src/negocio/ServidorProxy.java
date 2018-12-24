@@ -57,9 +57,9 @@ public class ServidorProxy {
         return serverM;
     }
     
-    public String servidorLeilao(String escolha, String nomeServidor) throws IOException{
-        out.write(escolha + " " + nomeServidor);
-        out.newLine();
+    public String servidorLeilao(String escolha, String nomeServidor, String licitacao) throws IOException{
+        out.write(escolha + " " + nomeServidor+ " "+ licitacao);
+        out.newLine(); 
         out.flush();
         String serverM = in.readLine();
         System.out.println("O cliente recebeu: " + serverM);
@@ -91,8 +91,8 @@ public class ServidorProxy {
         return disponiveis;
     }
     
-    public String consultarPropostas(String escolha) throws IOException{
-        out.write(""+escolha);
+    public String consultarPropostas(String escolha, String nomeServidor) throws IOException{
+        out.write(escolha + " " + nomeServidor);
         out.newLine();
         out.flush();
 
