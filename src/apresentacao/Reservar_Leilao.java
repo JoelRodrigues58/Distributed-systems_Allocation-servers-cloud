@@ -8,10 +8,10 @@ public class Reservar_Leilao extends javax.swing.JFrame {
 
     
     public Reservar_Leilao(ServidorProxy proxy, String email) {
-        this.setLocationRelativeTo(null);
         this.proxy=proxy;
         this.email=email;
         initComponents();
+        this.setLocationRelativeTo(null);
         this.email_logado.setText(email);
     }
 
@@ -79,7 +79,7 @@ public class Reservar_Leilao extends javax.swing.JFrame {
 
         email_logado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel2.setText("Licitação:");
+        jLabel2.setText("Licitação Mínima:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

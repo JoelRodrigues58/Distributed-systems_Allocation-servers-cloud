@@ -12,8 +12,10 @@ public class MenuInicial extends javax.swing.JFrame {
     
     public MenuInicial(ServidorProxy proxy) {
         this.proxy=proxy;
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setSize(650, 400);
+        this.setLocationRelativeTo(null);
+        
     }
 
     

@@ -32,6 +32,7 @@ public class Cliente {
             this.proxy = new ServidorProxy(in,out,socket);
             
             MenuInicial menuInicial = new MenuInicial(proxy);
+            //menuInicial.setLocationRelativeTo(null);
             menuInicial.setVisible(true);
 
         } catch (IOException e) {

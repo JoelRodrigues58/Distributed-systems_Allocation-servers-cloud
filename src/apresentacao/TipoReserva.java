@@ -8,10 +8,10 @@ public class TipoReserva extends javax.swing.JFrame {
     private static String email;
 
     public TipoReserva(ServidorProxy proxy, String email) {
-        this.setLocationRelativeTo(null);
         this.proxy=proxy;
         this.email=email;
         initComponents();
+        this.setLocationRelativeTo(null);
         this.email_logado.setText(email);
     }
 

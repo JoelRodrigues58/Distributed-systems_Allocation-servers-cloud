@@ -15,12 +15,12 @@ public class Reservas extends javax.swing.JFrame {
     private static String reservas;
     
     public Reservas(ServidorProxy proxy, String email, String reservas) {
-        this.setLocationRelativeTo(null);
         this.proxy=proxy;
         this.email=email;
         this.reservas=reservas;
         myInitComponents();
         initComponents();
+        this.setLocationRelativeTo(null);
         this.email_logado.setText(email);
     }
 

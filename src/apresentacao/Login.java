@@ -11,9 +11,10 @@ public class Login extends javax.swing.JFrame {
 
     
     public Login(ServidorProxy proxy) {
-        this.setLocationRelativeTo(null);
         this.proxy=proxy;
         initComponents();
+        this.setLocationRelativeTo(null);
+        
     }
 
 
@@ -46,6 +47,12 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         jLabel1.setText("Email:");
 
+        email.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                emailActionPerformed(evt);
+            }
+        });
+
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         jLabel2.setText("Password:");
 
@@ -73,7 +80,7 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(email)
                             .addComponent(password)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(223, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(login1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sair, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -146,6 +153,10 @@ public class Login extends javax.swing.JFrame {
             password.setText("");
         }
     }//GEN-LAST:event_login1ActionPerformed
+
+    private void emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailActionPerformed
 
     /**
      * @param args the command line arguments

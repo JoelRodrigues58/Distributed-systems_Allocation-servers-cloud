@@ -20,12 +20,12 @@ public class Servidores extends javax.swing.JFrame {
      * Creates new form Servidores
      */
     public Servidores(ServidorProxy proxy, String email, String servidoresDisponiveis) {
-        this.setLocationRelativeTo(null);
         this.proxy=proxy;
         this.email=email;
         this.servidoresDisponiveis=servidoresDisponiveis;
         myInitComponents();
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**

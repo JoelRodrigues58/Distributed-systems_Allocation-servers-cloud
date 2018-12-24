@@ -9,21 +9,96 @@ public class TratarCliente implements Runnable {
     private Utilizadores utilizadores;
     private String email; //para o método consultarConta
     private boolean autenticado;
+    private BufferedReader in;
+    private BufferedWriter out;
 
-    public TratarCliente(Socket s, ServidoresCloud sc, Utilizadores ut){
+    public TratarCliente(Socket s, ServidoresCloud sc, Utilizadores ut) throws IOException{
         this.clienteSocket = s;
         this.servidoresCloud = sc;
         this.utilizadores = ut;
+        this.in = new BufferedReader(new InputStreamReader(clienteSocket.getInputStream()));
+        this.out = new BufferedWriter(new OutputStreamWriter(clienteSocket.getOutputStream()));        
         this.autenticado = false;
     }
 
+    public void efetuarRegisto(String[] msg) throws IOException{
+        String serverM;
+        this.email = msg[1];
+        String password = msg[2];
+        boolean registo = this.utilizadores.registar(this.email, password);
+
+        if (registo) {
+            serverM = "Ok";
+            this.autenticado = true;
+            
+        } else serverM = "Not Ok";
+
+        out.write(serverM);
+        out.newLine();
+        out.flush();
+        System.out.println("O servidor respondeu: " + serverM);
+    }
+    
+    public void efetuarLogin(String[] msg) throws IOException{
+        String password, serverM;
+        this.email = msg[1];
+        password = msg[2];
+
+        boolean login = this.utilizadores.autenticar(this.email, password);
+
+        if (login) {
+            serverM = "Ok";
+            this.autenticado = true;
+        } else serverM = "Not Ok";
+
+         out.write(serverM);
+         out.newLine();
+         out.flush();
+         System.out.println("O servidor respondeu: " + serverM);
+    }
+    
+    public void reservaPedido(String[] msgAut) throws IOException{
+        String serverM, idReserva;
+        String nomeServidor = msgAut[1];
+        
+        if(this.utilizadores.getSaldoCliente(email)>0){
+            idReserva = this.servidoresCloud.reservarPedido(nomeServidor);
+
+            if(idReserva!=null && !idReserva.equals("ServidorInexistente") && !idReserva.equals("TodosServidoresIndisponiveis")) {
+                this.utilizadores.adicionarReservas(email,idReserva);
+
+                Thread descontarSaldo = new Thread(
+                                            new DescontaSaldo(
+                                            this.utilizadores,
+                                            email,
+                                            this.servidoresCloud.taxaServidor(nomeServidor),
+                                            servidoresCloud,
+                                            nomeServidor,
+                                            idReserva)
+                                  );
+                
+                descontarSaldo.start();
+                serverM = "Ok";
+
+            }
+            else if(idReserva!=null && idReserva.equals("TodosServidoresIndisponiveis")){
+                serverM= "TodosServidoresIndisponiveis";
+            }
+            else serverM="ServidorInexistente";
+        }
+        else serverM="DinheiroInsuficiente";
+        
+        out.write(serverM);
+        out.newLine();
+        out.flush();
+        System.out.println("O servidor respondeu: " + serverM);
+    }
+    
     @Override
     public void run() {
         try {
 
             System.out.println("Conexão obtida com " + Thread.currentThread().getName() + "!");
-            BufferedReader in = new BufferedReader(new InputStreamReader(clienteSocket.getInputStream()));
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clienteSocket.getOutputStream()));
             String clientM, serverM;
 
             while ((clientM = in.readLine()) != null) {
@@ -34,43 +109,15 @@ public class TratarCliente implements Runnable {
                     System.out.println("Opção do cliente: "+ msg[0]);
                     int escolha = Integer.parseInt(msg[0]);
                     
-
                     switch (escolha) {
                         case 1:
                             //Efetuar registo
-                            this.email = msg[1];
-                            String password = msg[2];
-
-                            boolean registo = this.utilizadores.registar(this.email, password);
-
-                            if (registo) {
-                                serverM = "Ok";
-                                this.autenticado = true;
-                               
-                            } else serverM = "Not Ok";
-
-                            out.write(serverM);
-                            out.newLine();
-                            out.flush();
-                            System.out.println("O servidor respondeu: " + serverM);
+                            efetuarRegisto(msg);
                             break;
 
                         case 2:
                             //Efetuar login
-                            this.email = msg[1];
-                            password = msg[2];
-
-                            boolean login = this.utilizadores.autenticar(this.email, password);
-
-                            if (login) {
-                                serverM = "Ok";
-                                this.autenticado = true;
-                            } else serverM = "Not Ok";
-
-                            out.write(serverM);
-                            out.newLine();
-                            out.flush();
-                            System.out.println("O servidor respondeu: " + serverM);
+                            efetuarLogin(msg);
                             break;
 
                         default:
@@ -79,12 +126,10 @@ public class TratarCliente implements Runnable {
                 }
 
                 else{
-
                     String[] msgAut = clientM.split(" ");
 
                     int escolha = Integer.parseInt(msgAut[0]);
                     System.out.println("Opção do cliente: "+ msgAut[0]);
-                    String idReserva;
 
                     switch (escolha){
                         case -1:
@@ -95,38 +140,7 @@ public class TratarCliente implements Runnable {
                             
                         case 1:
                             //Reserva a pedido
-                            String nomeServidor = msgAut[1];
-                            
-                            if(this.utilizadores.getSaldoCliente(email)>0){
-                            idReserva = this.servidoresCloud.reservarPedido(nomeServidor);
-
-                                if(idReserva!=null && !idReserva.equals("ServidorInexistente") && !idReserva.equals("TodosServidoresIndisponiveis")) {
-                                    this.utilizadores.adicionarReservas(email,idReserva);
-
-                                  Thread descontarSaldo = new Thread(
-                                    new DescontaSaldo(
-                                            this.utilizadores,
-                                            email,
-                                            this.servidoresCloud.taxaServidor(nomeServidor),
-                                            servidoresCloud,
-                                            nomeServidor,
-                                            idReserva)
-                                  );
-
-                                    descontarSaldo.start();
-                                    serverM = "Ok";
-
-                                }else if(idReserva!=null && idReserva.equals("TodosServidoresIndisponiveis")){
-                                    serverM= "TodosServidoresIndisponiveis";
-                                }
-                                else serverM="ServidorInexistente";
-                            }
-                            else serverM="DinheiroInsuficiente";
-                            
-                            out.write(serverM);
-                            out.newLine();
-                            out.flush();
-                            System.out.println("O servidor respondeu: " + serverM);
+                            reservaPedido(msgAut);
                             break;
 
                         case 2:

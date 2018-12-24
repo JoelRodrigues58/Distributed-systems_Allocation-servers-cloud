@@ -12,9 +12,9 @@ public class Registo extends javax.swing.JFrame {
 
     
     public Registo(ServidorProxy proxy) {
-        this.setLocationRelativeTo(null);
         this.proxy=proxy;
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     

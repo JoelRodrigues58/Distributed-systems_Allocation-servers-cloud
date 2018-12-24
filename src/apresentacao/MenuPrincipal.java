@@ -16,8 +16,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     public MenuPrincipal(ServidorProxy proxy,String email ) {
         this.proxy=proxy;
         this.email=email;
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setSize(800, 450);
+        this.setLocationRelativeTo(null);
         this.email_logado.setText(email);
     }
 
