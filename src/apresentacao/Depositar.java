@@ -5,17 +5,20 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import negocio.Posicao;
 import negocio.ServidorProxy;
 
 public class Depositar extends javax.swing.JFrame {
     private static ServidorProxy proxy;
     private static String email;
+    private static Posicao pos;
 
-    public Depositar(ServidorProxy proxy, String email) {
+    public Depositar(ServidorProxy proxy, String email,Posicao pos) {
         this.proxy=proxy;
         this.email=email;
+        this.pos=pos;
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocation(pos.getX(), pos.getY()); 
         this.email_logado.setText(email);
     }
 
@@ -48,7 +51,7 @@ public class Depositar extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
         jLabel1.setText("Insira o montante que deseja depositar:");
 
         montante.addActionListener(new java.awt.event.ActionListener() {
@@ -105,13 +108,15 @@ public class Depositar extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(82, 82, 82)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(137, 137, 137)
                         .addComponent(montante, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(confirmar)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(confirmar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jLabel1)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -123,7 +128,7 @@ public class Depositar extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(email_logado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
@@ -144,7 +149,7 @@ public class Depositar extends javax.swing.JFrame {
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
         // TODO add your handling code here:
-        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email);
+        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email,pos);
         menuprincipal.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_sairActionPerformed
@@ -205,7 +210,7 @@ public class Depositar extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Depositar(proxy,email).setVisible(true);
+                new Depositar(proxy,email,pos).setVisible(true);
             }
         });
     }

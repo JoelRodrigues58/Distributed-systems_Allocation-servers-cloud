@@ -4,16 +4,19 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import negocio.Posicao;
 import negocio.ServidorProxy;
 
 public class Login extends javax.swing.JFrame {
     private static ServidorProxy proxy;
+    private static Posicao pos;
 
     
-    public Login(ServidorProxy proxy) {
+    public Login(ServidorProxy proxy,Posicao pos) {
         this.proxy=proxy;
+        this.pos=pos;
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocation(pos.getX(), pos.getY()); 
         
     }
 
@@ -117,7 +120,7 @@ public class Login extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             proxy.tirarAutenticacao();
-            MenuInicial menuinicial = new MenuInicial(proxy);
+            MenuInicial menuinicial = new MenuInicial(proxy,pos);
             menuinicial.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -134,7 +137,7 @@ public class Login extends javax.swing.JFrame {
             try {
                 String resultado = proxy.efetuarLogin("2",email_submetido.concat(" "+password_submetida));
                 if(resultado.equals("Ok")){
-                    MenuPrincipal menuPrincipal = new MenuPrincipal(proxy,email_submetido);
+                    MenuPrincipal menuPrincipal = new MenuPrincipal(proxy,email_submetido,pos);
                     menuPrincipal.setVisible(true);
                     this.setVisible(false);
                 }
@@ -189,7 +192,7 @@ public class Login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login(proxy).setVisible(true);
+                new Login(proxy,pos).setVisible(true);
             }
         });
     }

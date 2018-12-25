@@ -1,26 +1,33 @@
 package apresentacao;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import negocio.Posicao;
 import negocio.ServidorProxy;
 
 public class Reservas extends javax.swing.JFrame {
     private static ServidorProxy proxy;
     private static String email;
     private static String reservas;
+    private static Posicao pos;
     
-    public Reservas(ServidorProxy proxy, String email, String reservas) {
+    public Reservas(ServidorProxy proxy, String email, String reservas,Posicao pos) {
         this.proxy=proxy;
         this.email=email;
         this.reservas=reservas;
+        this.pos=pos;
         myInitComponents();
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocation(pos.getX(), pos.getY()); 
         this.email_logado.setText(email);
     }
 
@@ -36,6 +43,10 @@ public class Reservas extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         sair = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        idReserva = new javax.swing.JTextField();
+        terminar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         label4.setFont(new java.awt.Font("Myanmar Sangam MN", 3, 48)); // NOI18N
         label4.setText("Gestão de Servidores");
@@ -68,13 +79,25 @@ public class Reservas extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
+        jLabel1.setText("Terminar reserva:");
+
+        terminar.setText("Terminar");
+        terminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                terminarActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("ID:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(52, 52, 52)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -83,15 +106,24 @@ public class Reservas extends javax.swing.JFrame {
                                 .addComponent(email_logado, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(label5))
                         .addGap(0, 47, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(idReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(terminar)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(sair, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -110,7 +142,15 @@ public class Reservas extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(174, 174, 174)
-                .addComponent(sair, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sair, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(idReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(terminar)
+                            .addComponent(jLabel3))))
                 .addContainerGap())
         );
 
@@ -119,10 +159,38 @@ public class Reservas extends javax.swing.JFrame {
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
         // TODO add your handling code here:
-        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email);
+        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email,pos);
         menuprincipal.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_sairActionPerformed
+
+    private void terminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_terminarActionPerformed
+        // TODO add your handling code here:
+        String idReserva = this.idReserva.getText();
+        if(idReserva.length()!=0){
+            try {
+                String resultado= this.proxy.terminarReserva("8", idReserva);
+                if(!resultado.equals("IdInvalido")){
+                    JOptionPane.showMessageDialog(null, "Reserva terminada com sucesso.");
+                    String res = this.proxy.consultarReservas("7 ");
+                    Reservas reservas = new Reservas(proxy,email,res,pos);
+                    reservas.setVisible(true);
+                    this.setVisible(false);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Id inserido é inválido.");
+                    this.idReserva.setText("");
+                }
+                
+            } catch (IOException ex) {
+                Logger.getLogger(Reservas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }else{
+            JOptionPane.showMessageDialog(null, "Insira um ID.");
+            this.idReserva.setText("");
+        }
+        
+    }//GEN-LAST:event_terminarActionPerformed
 
     
     private void myInitComponents(){
@@ -183,19 +251,23 @@ public class Reservas extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Reservas(proxy,email,reservas).setVisible(true);
+                new Reservas(proxy,email,reservas,pos).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel email_logado;
+    private javax.swing.JTextField idReserva;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel label4;
     private javax.swing.JLabel label5;
     private javax.swing.JButton sair;
+    private javax.swing.JButton terminar;
     // End of variables declaration//GEN-END:variables
 }

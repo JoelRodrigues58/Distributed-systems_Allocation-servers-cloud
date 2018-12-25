@@ -123,14 +123,18 @@ public class ServidoresCloud {
             nDisponiveis = 0;
             nLeiloes = 0;
             String nome = null;
+            double taxaFixa=0;
+            double licitacaoMinima=0;
             for(ServidorCloud servidorCloud: sC){
                 nome = servidorCloud.getNome();
+                taxaFixa = servidorCloud.getTaxaFixa();
+                licitacaoMinima = servidorCloud.getLicitacaoMinima();
                 if(!servidorCloud.isOcupado()) nDisponiveis++;
                 else {
                     if(servidorCloud.isLeilao()) nLeiloes++;
                 }
             }
-            stringBuilder.append("-"+nome +" "+ nDisponiveis +" " + nLeiloes);
+            stringBuilder.append("-"+nome +" "+ nDisponiveis +" " + nLeiloes + " " +taxaFixa + " "+ licitacaoMinima );
         }
 
         return stringBuilder.toString();
@@ -152,6 +156,14 @@ public class ServidoresCloud {
         }
     }
     
+    public String servidorPorId(int id){
+        for(ArrayList<ServidorCloud> sC : this.servidores.values()){
+            for(ServidorCloud s : sC){
+                if(s.getId()==id) return s.getNome();
+            }
+        }
+        return null;
+    }
     public String propostasPorServidor(String nomeServidor){
         StringBuilder res = new StringBuilder();
         ArrayList<Proposta> propostas = this.propostas.get(nomeServidor);

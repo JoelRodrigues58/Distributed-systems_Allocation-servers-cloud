@@ -120,4 +120,13 @@ public class ServidorProxy {
         System.out.println("O cliente recebeu: " + serverM);
         return serverM;
     }
+    
+    public String terminarReserva(String escolha, String idReserva) throws IOException{
+        out.write(escolha+" "+idReserva);
+        out.newLine();
+        out.flush();
+        String serverM = in.readLine();
+        System.out.println("O cliente recebeu: " + serverM);
+        return serverM;
+    }
 }

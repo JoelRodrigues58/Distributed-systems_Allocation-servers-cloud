@@ -3,19 +3,20 @@ package apresentacao;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import negocio.Posicao;
 import negocio.ServidorProxy;
 
 
 public class MenuInicial extends javax.swing.JFrame {
     private static ServidorProxy proxy;
+    private static Posicao pos;
 
     
-    public MenuInicial(ServidorProxy proxy) {
+    public MenuInicial(ServidorProxy proxy, Posicao pos) {
         this.proxy=proxy;
+        this.pos=pos;
         initComponents();
-        this.setSize(650, 400);
-        this.setLocationRelativeTo(null);
-        
+        this.setLocation(pos.getX(), pos.getY()); 
     }
 
     
@@ -102,14 +103,14 @@ public class MenuInicial extends javax.swing.JFrame {
 
     private void registarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registarActionPerformed
         // TODO add your handling code here:
-        Registo registo = new Registo(proxy);
+        Registo registo = new Registo(proxy,pos);
         registo.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_registarActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         // TODO add your handling code here:
-        Login login = new Login(proxy);
+        Login login = new Login(proxy,pos);
         login.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_loginActionPerformed
@@ -153,7 +154,7 @@ public class MenuInicial extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
-                new MenuInicial(proxy).setVisible(true);
+                new MenuInicial(proxy,pos).setVisible(true);
                 
             }
         });

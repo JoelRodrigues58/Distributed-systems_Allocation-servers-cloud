@@ -62,7 +62,7 @@ public class Utilizadores {
     
     public double descontarSaldo(String email,double taxa){
         double saldo_atual = this.utilizadores.get(email).getMontante();
-        double saldo_final =Double.sum(saldo_atual,-taxa);
+        double saldo_final = Double.sum(saldo_atual,-taxa);
         if(saldo_final>=0){
             System.out.println("A descontar: " + taxa);
             this.utilizadores.get(email).setMontante(saldo_final);
@@ -73,12 +73,23 @@ public class Utilizadores {
         return saldo_final;
     } 
     
-    public void retiraReserva(String email, String idReserva){
+    public String retiraReserva(String email, String idReserva){
         ArrayList<String> reservas = this.utilizadores.get(email).getReservas();
         
-        for(String res : reservas){
-            if(res.equals(idReserva)) reservas.remove(res);
+        if(reservas!=null){
+            for(String res : reservas){
+                String[] id = res.split(" ");
+                if(id[1].equals(idReserva)) {
+                    reservas.remove(res);
+                    return "Ok";
+                }
+            }
+            return "IdInvalido";
+            
+        }else {
+            return "NaoTemReservas";
         }
+
     }
     
     public double getSaldoCliente(String email){

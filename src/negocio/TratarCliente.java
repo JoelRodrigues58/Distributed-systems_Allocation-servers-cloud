@@ -224,8 +224,20 @@ public class TratarCliente implements Runnable {
                             System.out.println("O servidor respondeu: "+ reservas);
                             break;
                         case 8:
-                            //Cancelar reserva
+                            //Terminar reserva
+                            int id = Integer.parseInt(msgAut[1]);
+                            String res = this.utilizadores.retiraReserva(email, msgAut[1]);
+                            if(!res.equals("IdInvalido") && !res.equals("NaoTemReservas")){
+                                this.servidoresCloud.desocupaServidor(this.servidoresCloud.servidorPorId(id), id);
+                                serverM="Ok";
+                            }else serverM="IdInvalido";
+                            
+                            out.write(serverM);
+                            out.newLine();
+                            out.flush();
+                            System.out.println("O servidor respondeu: "+ serverM);
                             break;
+                            
                         default:
                             break;
                     }

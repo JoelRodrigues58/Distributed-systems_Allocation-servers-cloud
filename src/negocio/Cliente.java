@@ -5,8 +5,13 @@ import java.io.*;
 import java.net.Socket;
 
 import static com.sun.javafx.util.Utils.split;
+import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 public class Cliente {
     private String endereco;
@@ -31,8 +36,10 @@ public class Cliente {
             
             this.proxy = new ServidorProxy(in,out,socket);
             
-            MenuInicial menuInicial = new MenuInicial(proxy);
-            //menuInicial.setLocationRelativeTo(null);
+            Posicao pos = new Posicao(0,400);
+            
+            MenuInicial menuInicial = new MenuInicial(proxy,pos);
+
             menuInicial.setVisible(true);
 
         } catch (IOException e) {
@@ -41,6 +48,7 @@ public class Cliente {
 
     }
 
+    
     public static void main(String[] args){
 
         String endereco = "localhost"; //127.0.0.1

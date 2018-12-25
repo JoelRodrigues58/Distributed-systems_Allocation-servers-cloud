@@ -5,20 +5,22 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import negocio.Posicao;
 import negocio.ServidorProxy;
 
 
 public class MenuPrincipal extends javax.swing.JFrame {
     private static ServidorProxy proxy;
     private static String email;
+    private static Posicao pos;
 
     
-    public MenuPrincipal(ServidorProxy proxy,String email ) {
+    public MenuPrincipal(ServidorProxy proxy,String email, Posicao pos) {
         this.proxy=proxy;
         this.email=email;
+        this.pos=pos;
         initComponents();
-        this.setSize(800, 450);
-        this.setLocationRelativeTo(null);
+        this.setLocation(pos.getX(), pos.getY()); 
         this.email_logado.setText(email);
     }
 
@@ -232,7 +234,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             proxy.tirarAutenticacao();
-            MenuInicial menuinicial = new MenuInicial(proxy);
+            MenuInicial menuinicial = new MenuInicial(proxy,pos);
             menuinicial.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -244,7 +246,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             String servidoresDisponiveis = proxy.servidoresDisponiveis("3 ");
-            Servidores servidores = new Servidores(proxy,email,servidoresDisponiveis);
+            Servidores servidores = new Servidores(proxy,email,servidoresDisponiveis,pos);
             servidores.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -265,14 +267,14 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     private void depositarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositarActionPerformed
         // TODO add your handling code here:
-        Depositar depositar = new Depositar(proxy,email);
+        Depositar depositar = new Depositar(proxy,email,pos);
         depositar.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_depositarActionPerformed
 
     private void reservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservaActionPerformed
         // TODO add your handling code here:
-        TipoReserva tipoReserva = new TipoReserva(proxy,email);
+        TipoReserva tipoReserva = new TipoReserva(proxy,email,pos);
         tipoReserva.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_reservaActionPerformed
@@ -281,7 +283,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             String res = this.proxy.consultarReservas("7 ");
-            Reservas reservas = new Reservas(proxy,email,res);
+            Reservas reservas = new Reservas(proxy,email,res,pos);
             reservas.setVisible(true);
             this.setVisible(false);
             
@@ -292,7 +294,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     private void consultarPropostasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarPropostasActionPerformed
         // TODO add your handling code here:
-        ConsultarPropostas consultarpropostas = new ConsultarPropostas(proxy,email);
+        ConsultarPropostas consultarpropostas = new ConsultarPropostas(proxy,email,pos);
         consultarpropostas.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_consultarPropostasActionPerformed
@@ -327,7 +329,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MenuPrincipal(proxy,email).setVisible(true);
+                new MenuPrincipal(proxy,email,pos).setVisible(true);
             }
         });
     }

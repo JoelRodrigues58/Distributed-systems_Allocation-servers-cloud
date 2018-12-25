@@ -9,27 +9,32 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import negocio.Posicao;
 import negocio.ServidorProxy;
 
 public class ConsultarPropostas extends javax.swing.JFrame {
     private static ServidorProxy proxy;
     private static String email;
     private static String propostas;
+    private static Posicao pos;
 
-    public ConsultarPropostas(ServidorProxy proxy, String email) {
+    public ConsultarPropostas(ServidorProxy proxy, String email,Posicao pos) {
         this.proxy=proxy;
         this.email=email;
+        this.pos=pos;
+        desenhaTabela("");
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocation(pos.getX(), pos.getY()); 
     }
     
-    public ConsultarPropostas(ServidorProxy proxy, String email,String propostas) {
+    public ConsultarPropostas(ServidorProxy proxy, String email,String propostas, Posicao pos) {
         this.proxy=proxy;
         this.email=email;
         this.propostas=propostas;
+        this.pos=pos;
         desenhaTabela(propostas);
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocation(pos.getX(), pos.getY()); 
     }
 
     @SuppressWarnings("unchecked")
@@ -106,7 +111,7 @@ public class ConsultarPropostas extends javax.swing.JFrame {
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
         // TODO add your handling code here:
-        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email);
+        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email,pos);
         menuprincipal.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_sairActionPerformed
@@ -120,9 +125,9 @@ public class ConsultarPropostas extends javax.swing.JFrame {
                 String propostas = proxy.consultarPropostas("6",nomeServidor);
                 if(!propostas.equals("Naohapropostas") && !propostas.equals("ServidorInexistente")){
                     desenhaTabela(propostas);
-                   // this.setVisible(false);
-                   // ConsultarPropostas consultarproposta = new ConsultarPropostas(proxy,email,propostas);
-                   // consultarproposta.setVisible(true);
+                    //this.setVisible(false);
+                    //ConsultarPropostas consultarproposta = new ConsultarPropostas(proxy,email,propostas,pos);
+                    //consultarproposta.setVisible(true);
                 }
                 else if(propostas.equals("Naohapropostas")){
                     JOptionPane.showMessageDialog(null, "Não existem propostas para esse servidor");
@@ -162,9 +167,9 @@ public class ConsultarPropostas extends javax.swing.JFrame {
         panel.setSize(450, 80);
 
         this.getContentPane().setLayout(null);
-        this.getContentPane().remove(panel);
         
         this.getContentPane().add(panel, BorderLayout.CENTER);
+        
         this.pack();
     }
 
@@ -195,7 +200,7 @@ public class ConsultarPropostas extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ConsultarPropostas(proxy,email).setVisible(true);
+                new ConsultarPropostas(proxy,email,pos).setVisible(true);
             }
         });
     }

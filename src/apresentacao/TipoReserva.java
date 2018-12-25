@@ -1,17 +1,20 @@
 
 package apresentacao;
 
+import negocio.Posicao;
 import negocio.ServidorProxy;
 
 public class TipoReserva extends javax.swing.JFrame {
     private static ServidorProxy proxy;
     private static String email;
+    private static Posicao pos;
 
-    public TipoReserva(ServidorProxy proxy, String email) {
+    public TipoReserva(ServidorProxy proxy, String email,Posicao pos) {
         this.proxy=proxy;
         this.email=email;
+        this.pos=pos;
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocation(pos.getX(), pos.getY()); 
         this.email_logado.setText(email);
     }
 
@@ -118,14 +121,14 @@ public class TipoReserva extends javax.swing.JFrame {
 
     private void leilaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leilaoActionPerformed
         // TODO add your handling code here:
-        Reservar_Leilao reserva = new Reservar_Leilao(proxy,email);
+        Reservar_Leilao reserva = new Reservar_Leilao(proxy,email,pos);
         reserva.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_leilaoActionPerformed
 
     private void pedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pedidoActionPerformed
         // TODO add your handling code here:
-        Reservar_Pedido reserva = new Reservar_Pedido(proxy,email);
+        Reservar_Pedido reserva = new Reservar_Pedido(proxy,email,pos);
         reserva.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_pedidoActionPerformed
@@ -160,7 +163,7 @@ public class TipoReserva extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TipoReserva(proxy,email).setVisible(true);
+                new TipoReserva(proxy,email,pos).setVisible(true);
             }
         });
     }

@@ -10,22 +10,25 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import negocio.Posicao;
 import negocio.ServidorProxy;
 
 public class Servidores extends javax.swing.JFrame {
     private static ServidorProxy proxy;
     private static String email;
     private static String servidoresDisponiveis;
+    private static Posicao pos;
     /**
      * Creates new form Servidores
      */
-    public Servidores(ServidorProxy proxy, String email, String servidoresDisponiveis) {
+    public Servidores(ServidorProxy proxy, String email, String servidoresDisponiveis,Posicao pos) {
         this.proxy=proxy;
         this.email=email;
         this.servidoresDisponiveis=servidoresDisponiveis;
+        this.pos=pos;
         myInitComponents();
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocation(pos.getX(), pos.getY()); 
     }
 
     /**
@@ -87,15 +90,15 @@ public class Servidores extends javax.swing.JFrame {
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
         // TODO add your handling code here:
-        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email);
+        MenuPrincipal menuprincipal = new MenuPrincipal(proxy,email,pos);
         menuprincipal.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_sairActionPerformed
 
     private void myInitComponents(){
-      String[] nomesColunas = {"Servidor", "Nº Disponíveis", "Nº Leilões"};
+      String[] nomesColunas = {"Servidor", "Nº Disponíveis", "Nº Leilões", "Taxa Fixa", "Licitação Mínima"};
       String[] s_disponiveis  = servidoresDisponiveis.split("-");
-      String[][] dados= new String[s_disponiveis.length][3];  
+      String[][] dados= new String[s_disponiveis.length][5];  
 
        for (int i = 0; i < s_disponiveis.length-1; i++) {
             String[] linha = s_disponiveis[i+1].split(" ");
@@ -147,7 +150,7 @@ public class Servidores extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Servidores(proxy,email,servidoresDisponiveis).setVisible(true);
+                new Servidores(proxy,email,servidoresDisponiveis,pos).setVisible(true);
             }
         });
     }
