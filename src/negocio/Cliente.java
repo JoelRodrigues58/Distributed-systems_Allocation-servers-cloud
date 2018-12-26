@@ -36,7 +36,9 @@ public class Cliente {
             
             this.proxy = new ServidorProxy(in,out,socket);
             
-            Posicao pos = new Posicao(0,400);
+            // (0,0) -> (700,0) -> (700,700) -> (0,700)
+            // (400,200) ~~ posicao central
+            Posicao pos = new Posicao(400,200);
             
             MenuInicial menuInicial = new MenuInicial(proxy,pos);
 

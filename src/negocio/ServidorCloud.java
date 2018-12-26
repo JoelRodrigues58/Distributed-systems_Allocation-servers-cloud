@@ -8,14 +8,14 @@ public class ServidorCloud {
     private int id;
     private boolean ocupado;
     private boolean leilao;
+    
 
-
-    public ServidorCloud(String nome, double taxaFixa, int id, boolean ocupado, boolean leilao, double licitacaoMinima) {
+    public ServidorCloud(String nome, double taxaFixa, int id, double licitacaoMinima) {
         this.nome = nome;
         this.taxaFixa = taxaFixa;
         this.id = id;
-        this.ocupado = ocupado;
-        this.leilao = leilao;
+        this.ocupado = false;
+        this.leilao = false;
         this.taxaLeiloada=0.0;
         this.licitacaoMinima = licitacaoMinima;
     }

@@ -95,6 +95,43 @@ public class TratarCliente implements Runnable {
         System.out.println("O servidor respondeu: " + serverM);
     }
     
+    public void reservaLeilao(String[]msgAut) throws IOException{
+        String serverM;
+        String nome_servidor = msgAut[1];
+        String licitacao = msgAut[2];
+                            
+        if(this.utilizadores.getSaldoCliente(email)>0){
+            String idReserva = this.servidoresCloud.reservarLeilao(nome_servidor, email, Double.parseDouble(licitacao));
+            if(!idReserva.equals("ServidorInexistente") && !idReserva.equals("LicitacaoBaixa") && !idReserva.equals("ServidoresOcupados")){
+                this.utilizadores.adicionarReservas(email, idReserva);
+
+                Thread descontarSaldo = new Thread(
+                        new DescontaSaldo(
+                        this.utilizadores,
+                        email,
+                        Double.parseDouble(licitacao),
+                        servidoresCloud,
+                        nome_servidor,
+                        idReserva)
+                );
+
+                descontarSaldo.start();
+                serverM="Ok";
+            }
+            else{
+                serverM=idReserva;
+            }
+        }
+        else{
+            serverM="SaldoInsuficiente";
+        }
+
+        out.write(serverM);
+        out.newLine();
+        out.flush();
+        System.out.println("O servidor respondeu: " + serverM);
+    }
+    
     @Override
     public void run() {
         try {
@@ -146,38 +183,7 @@ public class TratarCliente implements Runnable {
 
                         case 2:
                             //Reserva Leilão
-                            String nome_servidor = msgAut[1];
-                            String licitacao = msgAut[2];
-                            
-                            if(this.utilizadores.getSaldoCliente(email)>0){
-                                String idReserva = this.servidoresCloud.reservarLeilao(nome_servidor, email, Double.parseDouble(licitacao));
-                                if(!idReserva.equals("ServidorInexistente") && !idReserva.equals("LicitacaoBaixa") && !idReserva.equals("ServidoresOcupados")){
-                                    this.utilizadores.adicionarReservas(email, idReserva);
-                                      
-                                    Thread descontarSaldo = new Thread(
-                                            new DescontaSaldo(
-                                            this.utilizadores,
-                                            email,
-                                            Double.parseDouble(licitacao),
-                                            servidoresCloud,
-                                            nome_servidor,
-                                            idReserva)
-                                    );
-                
-                                    descontarSaldo.start();
-                                    serverM="Ok";
-                                }
-                                else{serverM=idReserva;}
-
-                               
-                            }else{
-                                serverM="SaldoInsuficiente";
-                            }
-                            
-                            out.write(serverM);
-                            out.newLine();
-                            out.flush();
-                            System.out.println("O servidor respondeu: " + serverM);
+                            reservaLeilao(msgAut);
                             break;
                             
                         case 3:
@@ -230,7 +236,8 @@ public class TratarCliente implements Runnable {
                             if(!res.equals("IdInvalido") && !res.equals("NaoTemReservas")){
                                 this.servidoresCloud.desocupaServidor(this.servidoresCloud.servidorPorId(id), id);
                                 serverM="Ok";
-                            }else serverM="IdInvalido";
+                            }
+                            else serverM="IdInvalido";
                             
                             out.write(serverM);
                             out.newLine();

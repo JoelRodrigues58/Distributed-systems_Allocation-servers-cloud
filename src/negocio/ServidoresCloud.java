@@ -19,7 +19,7 @@ public class ServidoresCloud {
     }
 
     public void registarServidor(String nome, double taxa, double licitacaoMinima){
-        ServidorCloud servidorCloud = new ServidorCloud(nome,taxa,proxId,false,false,licitacaoMinima);
+        ServidorCloud servidorCloud = new ServidorCloud(nome,taxa,proxId,licitacaoMinima);
 
         if(this.servidores.isEmpty() || !this.servidores.containsKey(nome)){
             ArrayList<ServidorCloud> servidores= new ArrayList<ServidorCloud>();
@@ -64,7 +64,7 @@ public class ServidoresCloud {
                     tentouLicitar = true;
                     licitMin = servidorCloud.getLicitacaoMinima();
                     if(licitacao >= licitMin) {
-                        servidorCloud.setTaxaLeiloada(licitacao);
+                        servidorCloud.setTaxaLeiloada(licitacao); //TIRAR ISTO, SE RETIRARMOS ESTA VARIÁVEL
                         servidorCloud.setLeilao(true);
                         servidorCloud.setOcupado(true);
                         return nomeServidor+" "+servidorCloud.getId();
@@ -73,7 +73,6 @@ public class ServidoresCloud {
             }
 
             if(!tentouLicitar) {
-                System.out.println("ENTREI");
                 registarProposta(nomeServidor,email,licitacao);
                 return "ServidoresOcupados";
             }
