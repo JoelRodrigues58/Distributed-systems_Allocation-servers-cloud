@@ -5,17 +5,20 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class ServidorProxy {
-     BufferedReader in;
-     BufferedWriter out;
-     Socket socket;
+     private BufferedReader in;
+     private BufferedWriter out;
+     private Socket socket;
+     
      
     public ServidorProxy(BufferedReader in, BufferedWriter out,Socket socket){
          this.in=in;
          this.socket=socket;
          this.out=out;
+         
     }
     
     public String efetuarRegisto(String escolha, String dados) throws IOException{

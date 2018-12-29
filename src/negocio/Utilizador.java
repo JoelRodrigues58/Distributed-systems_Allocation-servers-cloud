@@ -1,6 +1,7 @@
 package negocio;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Utilizador {
     private String password;
@@ -8,6 +9,7 @@ public class Utilizador {
     private double montante;
     private boolean autenticado;
     private ArrayList<String> reservas;
+    private ReentrantLock l; 
 
     public Utilizador(String password, String email, double montante) {
         this.password = password;
@@ -15,8 +17,13 @@ public class Utilizador {
         this.montante = montante;
         this.reservas=new ArrayList<String>();
         this.autenticado=false;
+        this.l = new ReentrantLock();
     }
 
+    public ReentrantLock getL() {
+        return l;
+    }
+    
     public boolean isAutenticado() {
         return autenticado;
     }

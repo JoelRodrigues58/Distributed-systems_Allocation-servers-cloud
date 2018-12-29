@@ -1,5 +1,7 @@
 package negocio;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 public class ServidorCloud {
     private String nome;
     private double taxaFixa;
@@ -8,6 +10,7 @@ public class ServidorCloud {
     private int id;
     private boolean ocupado;
     private boolean leilao;
+    private ReentrantLock l;
     
 
     public ServidorCloud(String nome, double taxaFixa, int id, double licitacaoMinima) {
@@ -18,8 +21,13 @@ public class ServidorCloud {
         this.leilao = false;
         this.taxaLeiloada=0.0;
         this.licitacaoMinima = licitacaoMinima;
+        this.l = new ReentrantLock();
     }
 
+    public ReentrantLock getL() {
+        return l;
+    }
+    
     public double getLicitacaoMinima() {
         return licitacaoMinima;
     }
