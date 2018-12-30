@@ -38,7 +38,7 @@ public class Cliente {
             
             // (0,0) -> (700,0) -> (700,700) -> (0,700)
             // (400,200) ~~ posicao central
-            Posicao pos = new Posicao(400,200);
+            Posicao pos = new Posicao(0,0);
             
             MenuInicial menuInicial = new MenuInicial(proxy,pos);
 

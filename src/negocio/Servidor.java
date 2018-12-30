@@ -24,13 +24,6 @@ public class Servidor {
     }
 
     public void comecaServidor(){
-
-        HashMap<String, ArrayList<ServidorCloud>> servidores = servidoresCloud.getServidores();
-        for ( ArrayList<ServidorCloud> sc : servidores.values()) {
-            AtribuirServidores atribuirservidores = new AtribuirServidores(sc,utilizadores,servidoresCloud);
-            Thread atribuirservidoresThread = new Thread(atribuirservidores);
-            atribuirservidoresThread.run();
-        }
         
         try {
             ServerSocket serverSocket = new ServerSocket(porta);

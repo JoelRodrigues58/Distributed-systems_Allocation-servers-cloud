@@ -22,7 +22,7 @@ public class AtribuirServidores implements Runnable{
             try {
                 
                 String idReserva = this.totalservidores.servidorParaProposta(servidores);
-                String split[] = idReserva.split(" ");
+                String split[] = idReserva.split("-");
                 this.utilizadores.adicionarReservas(split[0], split[1]);
                 
             } catch (InterruptedException ex) {

@@ -101,7 +101,7 @@ public class TratarCliente implements Runnable {
         String licitacao = msgAut[2];
                             
         if(this.utilizadores.getSaldoCliente(email)>0){
-            String idReserva = this.servidoresCloud.reservarLeilao(nome_servidor, email, Double.parseDouble(licitacao));
+            String idReserva = this.servidoresCloud.reservarLeilao(utilizadores,nome_servidor, email, Double.parseDouble(licitacao));
             if(!idReserva.equals("ServidorInexistente") && !idReserva.equals("LicitacaoBaixa") && !idReserva.equals("ServidoresOcupados")){
                 this.utilizadores.adicionarReservas(email, idReserva);
 
@@ -129,6 +129,7 @@ public class TratarCliente implements Runnable {
         out.write(serverM);
         out.newLine();
         out.flush();
+
         System.out.println("O servidor respondeu: " + serverM);
     }
     
