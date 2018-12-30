@@ -5,127 +5,134 @@ import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ServidoresCloud {
+       
+
     private HashMap<String, ArrayList<ServidorCloud>> servidores;
     private HashMap<String, ArrayList<Proposta>> propostas;
     private int proxId;
-    private ReentrantLock l;
+    private ReentrantLock lockServidores;
+    private ReentrantLock lockPropostas;
 
     public ServidoresCloud() {
         this.servidores = new HashMap<String,ArrayList<ServidorCloud>>();
         this.propostas = new HashMap<String, ArrayList<Proposta>>();
         this.proxId=0;
-        this.l = new ReentrantLock();
+        this.lockServidores = new ReentrantLock();
+        this.lockPropostas = new ReentrantLock();
     }
 
     public HashMap<String, ArrayList<ServidorCloud>> getServidores(){
         return this.servidores;
     }
 
-    public void registarServidor(String nome, double taxa, double licitacaoMinima){
-        l.lock();
-        try{
-            ServidorCloud servidorCloud = new ServidorCloud(nome,taxa,proxId,licitacaoMinima);
-                
-            if(this.servidores.isEmpty() || !this.servidores.containsKey(nome)){
-                ArrayList<ServidorCloud> servidores= new ArrayList<ServidorCloud>();
-                servidores.add(servidorCloud);
-                this.servidores.put(nome, servidores);
-            }
-            else{
-                this.servidores.get(nome).add(servidorCloud);
-            }
+    public synchronized void registarServidor(String nome, double taxa, double licitacaoMinima){
 
-            proxId++;
-        }finally{
-            l.unlock();
+        ServidorCloud servidorCloud = new ServidorCloud(nome,taxa,proxId,licitacaoMinima);
+
+        if(this.servidores.isEmpty() || !this.servidores.containsKey(nome)){
+            ArrayList<ServidorCloud> servidores= new ArrayList<ServidorCloud>();
+            servidores.add(servidorCloud);
+            this.servidores.put(nome, servidores);
         }
+        else{
+            this.servidores.get(nome).add(servidorCloud);
+        }
+
+        proxId++;
 
     }
 
     public String reservarPedido(String nomeServidor){
         ArrayList<ServidorCloud> servidorClouds=null;
-        boolean flag=false;
         String res=null;
-        l.lock();
-        try{
+
+        this.lockServidores.lock();
             servidorClouds = this.servidores.get(nomeServidor);
-              for(ServidorCloud servidorCloud : servidorClouds){
-                   servidorCloud.getL().lock();
+        synchronized (servidorClouds){
+            this.lockServidores.unlock();
+        
+            if(servidorClouds!=null){
+                for(ServidorCloud servidorCloud : servidorClouds){
+                        if(!servidorCloud.isOcupado()) {
+                            servidorCloud.setOcupado(true);
+                            return nomeServidor+" "+servidorCloud.getId();
+                        }
                 }
-        }finally{
-            l.unlock();
-        } 
-
-        if(servidorClouds!=null){
-            for(ServidorCloud servidorCloud : servidorClouds){
-               try{ 
-                    if(!servidorCloud.isOcupado()&& flag==false) {
-                        flag=true;
-                        servidorCloud.setOcupado(true);
-                        res = nomeServidor+" "+servidorCloud.getId();
-                    }
-                }finally{
-                    servidorCloud.getL().unlock();
-                }
+                return "TodosServidoresIndisponiveis";
             }
-            if(flag==false){return "TodosServidoresIndisponiveis";}
-            else{return res;}
+            else{
+                return "ServidorInexistente";
+            }
         }
-        else{
-            return "ServidorInexistente";
-        }
-
     }
 
     public String reservarLeilao(String nomeServidor, String email, double licitacao){
-
-        ArrayList<ServidorCloud> servidorClouds = this.servidores.get(nomeServidor);
-        
-        if(servidorClouds!=null){
-            double licitMin;
-            boolean tentouLicitar = false;
-            for(ServidorCloud servidorCloud : servidorClouds){
-                if(!servidorCloud.isOcupado()) {
+        ArrayList<ServidorCloud> servidorClouds =null;
+        boolean flag=false;
+        String res=null;
+        //Um comentário aí pa ver depois. 
+        this.lockServidores.lock();
+            servidorClouds = this.servidores.get(nomeServidor);
+        synchronized (servidorClouds){
+            this.lockServidores.unlock();
+            if(servidorClouds!=null){
+                double licitMin;
+                boolean tentouLicitar = false;
+                for(ServidorCloud servidorCloud : servidorClouds){
+                    if(!servidorCloud.isOcupado() && flag==false) {
                     tentouLicitar = true;
                     licitMin = servidorCloud.getLicitacaoMinima();
-                    if(licitacao >= licitMin) {
-                        servidorCloud.setTaxaLeiloada(licitacao); //TIRAR ISTO, SE RETIRARMOS ESTA VARIÁVEL
-                        servidorCloud.setLeilao(true);
-                        servidorCloud.setOcupado(true);
-                        return nomeServidor+" "+servidorCloud.getId();
+                        if(licitacao >= licitMin) {
+                            flag=true;
+                            servidorCloud.setTaxaLeiloada(licitacao); //TIRAR ISTO, SE RETIRARMOS ESTA VARIÁVEL
+                            servidorCloud.setLeilao(true);
+                            servidorCloud.setOcupado(true);
+                            return nomeServidor+" "+servidorCloud.getId();
+                        }
                     }
                 }
-            }
 
-            if(!tentouLicitar) {
-                registarProposta(nomeServidor,email,licitacao);
-                return "ServidoresOcupados";
+                if(!tentouLicitar) {
+                    registarProposta(nomeServidor,email,licitacao);
+                    return "ServidoresOcupados";
+                }
+                return  "LicitacaoBaixa";
             }
-
-            return  "LicitacaoBaixa";
+            else return "ServidorInexistente";
         }
-        else return "ServidorInexistente";
     }
 
     public void registarProposta(String nomeServidor, String email, double licitacao){
 
         Proposta proposta = new Proposta(licitacao,email);
+        boolean flag=false;
+        ArrayList<Proposta> p = null;
 
+        this.lockPropostas.lock();
         if(this.propostas.isEmpty() || !this.propostas.containsKey(nomeServidor)){
-            ArrayList<Proposta> propostas = new ArrayList<>();
-            propostas.add(proposta);
-            this.propostas.put(nomeServidor,propostas);
-        }
-        else {
-            ArrayList<Proposta> p = this.propostas.get(nomeServidor);
-            Proposta pr = verficarProposta(email,p);
-            if(pr!=null){
-                p.remove(pr);
+            try{
+                ArrayList<Proposta> propostas = new ArrayList<>();
+                propostas.add(proposta);
+                this.propostas.put(nomeServidor,propostas);
+                flag=true;
+            }finally{
+                this.lockPropostas.unlock();
             }
-
-            p.add(proposta);
         }
 
+        if(flag==false){
+            p = this.propostas.get(nomeServidor);
+            synchronized (p){
+                this.lockPropostas.unlock();
+                
+                Proposta pr = verficarProposta(email,p);
+
+                if(pr!=null){  p.remove(pr); }
+
+                p.add(proposta);
+            }
+        }
+   
     }
 
     public Proposta verficarProposta(String email, ArrayList<Proposta> propostas){
@@ -143,66 +150,96 @@ public class ServidoresCloud {
     public String consultarDisponiveis(){
         StringBuilder stringBuilder = new StringBuilder();
         int nDisponiveis, nLeiloes;
-        for (ArrayList<ServidorCloud> sC : this.servidores.values()) {
-            nDisponiveis = 0;
-            nLeiloes = 0;
-            String nome = null;
-            double taxaFixa=0;
-            double licitacaoMinima=0;
-            for(ServidorCloud servidorCloud: sC){
-                nome = servidorCloud.getNome();
-                taxaFixa = servidorCloud.getTaxaFixa();
-                licitacaoMinima = servidorCloud.getLicitacaoMinima();
-                if(!servidorCloud.isOcupado()) nDisponiveis++;
-                else {
-                    if(servidorCloud.isLeilao()) nLeiloes++;
+        this.lockServidores.lock();
+        try{
+            for (ArrayList<ServidorCloud> sC : this.servidores.values()) {
+                nDisponiveis = 0;
+                nLeiloes = 0;
+                String nome = null;
+                double taxaFixa=0;
+                double licitacaoMinima=0;
+                for(ServidorCloud servidorCloud: sC){
+                    nome = servidorCloud.getNome();
+                    taxaFixa = servidorCloud.getTaxaFixa();
+                    licitacaoMinima = servidorCloud.getLicitacaoMinima();
+                    if(!servidorCloud.isOcupado()) nDisponiveis++;
+                    else {
+                        if(servidorCloud.isLeilao()) nLeiloes++;
+                    }
                 }
-            }
-            stringBuilder.append("-"+nome +" "+ nDisponiveis +" " + nLeiloes + " " +taxaFixa + " "+ licitacaoMinima );
-        }
+                stringBuilder.append("-"+nome +" "+ nDisponiveis +" " + nLeiloes + " " +taxaFixa + " "+ licitacaoMinima );
 
-        return stringBuilder.toString();
+            }
+            return stringBuilder.toString();
+        }finally{
+            this.lockServidores.unlock();
+        }
     }
     
     public double taxaServidor(String nomeServidor){
-        return this.servidores.get(nomeServidor).get(0).getTaxaFixa();
+        this.lockServidores.lock();
+        ArrayList<ServidorCloud> servidores = this.servidores.get(nomeServidor);
+        synchronized (servidores) {
+            this.lockServidores.unlock();
+            return servidores.get(0).getTaxaFixa();
+        }
     }
 
     public void desocupaServidor(String nomeServidor,int id){
+        this.lockServidores.lock();
         ArrayList<ServidorCloud> servidores = this.servidores.get(nomeServidor);
-        for(ServidorCloud sC : servidores){
-            if(sC.isLeilao() && sC.getId()==id){
-                sC.setLeilao(false);
-                sC.setOcupado(false);
-            }else if(sC.getId()==id){
-                sC.setOcupado(false);
+        synchronized (servidores){
+            this.lockServidores.unlock();
+            for(ServidorCloud sC : servidores){
+                if(sC.isLeilao() && sC.getId()==id){
+                    sC.setLeilao(false);
+                    sC.setOcupado(false);
+                }else if(sC.getId()==id){
+                    sC.setOcupado(false);
+                }
             }
         }
     }
     
+    //TIRAR PARTIDO DO ID do servidor (mudar interface??)
     public String servidorPorId(int id){
-        for(ArrayList<ServidorCloud> sC : this.servidores.values()){
-            for(ServidorCloud s : sC){
-                if(s.getId()==id) return s.getNome();
+        this.lockServidores.lock();
+        try{
+            for(ArrayList<ServidorCloud> sC : this.servidores.values()){
+                for(ServidorCloud s : sC){
+                    if(s.getId()==id) return s.getNome();
+                }
             }
+           return null;
         }
-        return null;
+        finally{
+            this.lockServidores.unlock();
+        }
     }
+    
     public String propostasPorServidor(String nomeServidor){
         StringBuilder res = new StringBuilder();
+        this.lockPropostas.lock();
+        this.lockServidores.lock();
         ArrayList<Proposta> propostas = this.propostas.get(nomeServidor);
         ArrayList<ServidorCloud> servidores = this.servidores.get(nomeServidor);
         
-        if(propostas!=null && servidores!=null){
-            for(Proposta p : propostas){
-                res.append("-"+p.getLicitacao() + " " + p.getEmail());
-            }
-        }else if(servidores!=null){
-            return "Naohapropostas";
+        synchronized (servidores){
+            this.lockServidores.unlock();
+            synchronized (propostas){
+                this.lockPropostas.unlock();
+                    if(propostas!=null && servidores!=null){
+                        for(Proposta p : propostas){
+                            res.append("-"+p.getLicitacao() + " " + p.getEmail());
+                        }
+                    }else if(servidores!=null){
+                    return "Naohapropostas";
             
-        }else return "ServidorInexistente";
+                    }else return "ServidorInexistente";
         
-        return res.toString();
+                    return res.toString();
+            }
+        }
     }
 
 }

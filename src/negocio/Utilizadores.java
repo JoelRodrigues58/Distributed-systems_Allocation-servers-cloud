@@ -16,7 +16,9 @@ public class Utilizadores {
     public synchronized boolean registar(String email,String password){
         if(this.utilizadores.isEmpty() || !this.utilizadores.containsKey(email)){
             Utilizador utilizador = new Utilizador(password,email,0.0);
+            utilizador.setAutenticado(true);
             this.utilizadores.put(email, utilizador);
+
             return true;
         }
         else return false;
