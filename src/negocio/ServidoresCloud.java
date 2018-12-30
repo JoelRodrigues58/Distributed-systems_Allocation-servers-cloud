@@ -12,8 +12,8 @@ public class ServidoresCloud {
     private int proxId;
     private ReentrantLock lockServidores;
     private ReentrantLock lockPropostas;
-    private Condition not_Servidores = lockServidores.newCondition();
-    private Condition not_Propostas = lockPropostas.newCondition();
+    //private Condition not_Servidores = lockServidores.newCondition();
+    //private Condition not_Propostas = lockPropostas.newCondition();
     
     public ServidoresCloud() {
         this.servidores = new HashMap<String,ArrayList<ServidorCloud>>();
@@ -282,21 +282,23 @@ public class ServidoresCloud {
     
     public String servidorParaProposta(ArrayList<ServidorCloud> servidores) throws InterruptedException{
         String res=null;
-      
         synchronized (servidores){
             while((servidoresDisponiveis(servidores))==0){
                 servidores.wait();
             }
 
             this.lockPropostas.lock();
+
             ArrayList<Proposta> propostas = this.propostas.get(servidores.get(0).getNome());
-            synchronized (propostas){
+
+            synchronized (propostas) {
                 this.lockPropostas.unlock();
-                while(propostas==null || propostas.size()==0){
+                while (propostas == null || propostas.size() == 0) {
                     propostas.wait();
                 }
-                res= atualizaInformacao(servidores,propostas);
+                res = atualizaInformacao(servidores, propostas);
             }
+
         }
         return res;
     }
