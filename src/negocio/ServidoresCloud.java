@@ -2,17 +2,19 @@ package negocio;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ServidoresCloud {
        
-
     private HashMap<String, ArrayList<ServidorCloud>> servidores;
     private HashMap<String, ArrayList<Proposta>> propostas;
     private int proxId;
     private ReentrantLock lockServidores;
     private ReentrantLock lockPropostas;
-
+    private Condition not_Servidores = lockServidores.newCondition();
+    private Condition not_Propostas = lockPropostas.newCondition();
+    
     public ServidoresCloud() {
         this.servidores = new HashMap<String,ArrayList<ServidorCloud>>();
         this.propostas = new HashMap<String, ArrayList<Proposta>>();
@@ -241,5 +243,63 @@ public class ServidoresCloud {
             }
         }
     }
+    
+    
+    ///*****************************************************//
+    public int servidoresDisponiveis(ArrayList<ServidorCloud> servidores){
+        int s_disponiveis=0;
+        for(ServidorCloud sC : servidores){
+            if(!sC.isOcupado()) s_disponiveis++;
+        }
+        return s_disponiveis;
+    }
+    
+    // Servidor -> ocupado; Eliminar Proposta escolhida; Adicionar reserva a cliente. 
+    public String atualizaInformacao(ArrayList<ServidorCloud> servidores,ArrayList<Proposta> propostas){
+        double licitacao=0;
+        int indiceMelhorProposta=0;
+        ServidorCloud servidorEscolhido=null;
+        
+        for(ServidorCloud sC : servidores){
+            if(!sC.isOcupado()) {
+                sC.setOcupado(true);
+                servidorEscolhido=sC;
+            }
+        }
+        for(int i=0; i<propostas.size();i++){
+            Proposta proposta = propostas.get(i);
+            if(proposta.getLicitacao()>licitacao) {
+                licitacao=proposta.getLicitacao();
+                indiceMelhorProposta=i;
+            }
+        }
+        
+        propostas.remove(indiceMelhorProposta);
+        
+        return servidorEscolhido.getNome() + " " + servidorEscolhido.getId();
+        
+    }
+    
+    public String servidorParaProposta(ArrayList<ServidorCloud> servidores) throws InterruptedException{
+        String res=null;
+      
+        synchronized (servidores){
+            while((servidoresDisponiveis(servidores))==0){
+                servidores.wait();
+            }
+
+            this.lockPropostas.lock();
+            ArrayList<Proposta> propostas = this.propostas.get(servidores.get(0).getNome());
+            synchronized (propostas){
+                this.lockPropostas.unlock();
+                while(propostas==null || propostas.size()==0){
+                    propostas.wait();
+                }
+                res= atualizaInformacao(servidores,propostas);
+            }
+        }
+        return res;
+    }
+
 
 }
