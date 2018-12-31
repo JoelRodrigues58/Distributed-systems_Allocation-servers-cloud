@@ -2,6 +2,7 @@ package negocio;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class TratarCliente implements Runnable {
     private Socket clienteSocket;
@@ -60,25 +61,49 @@ public class TratarCliente implements Runnable {
     public void reservaPedido(String[] msgAut) throws IOException{
         String serverM, idReserva;
         String nomeServidor = msgAut[1];
-        
+        //(email, e o que recebe da funcao
         if(this.utilizadores.getSaldoCliente(email)>0){
+
             idReserva = this.servidoresCloud.reservarPedido(nomeServidor);
 
             if(idReserva!=null && !idReserva.equals("ServidorInexistente") && !idReserva.equals("TodosServidoresIndisponiveis")) {
-                this.utilizadores.adicionarReservas(email,idReserva);
+                String[] split = idReserva.split("-");
+                if (split[0].equals("2")) {
+                    System.out.println("ENTREI AQUI");
+                    String emailRemover = this.utilizadores.verificarReserva(split[1]);
 
-                Thread descontarSaldo = new Thread(
-                                            new DescontaSaldo(
-                                            this.utilizadores,
-                                            email,
-                                            this.servidoresCloud.taxaServidor(nomeServidor),
-                                            servidoresCloud,
-                                            nomeServidor,
-                                            idReserva)
-                                  );
-                
-                descontarSaldo.start();
-                serverM = "Ok";
+                    this.utilizadores.retiraReserva(emailRemover,split[1].split(" ")[1]);
+
+                    this.utilizadores.adicionarReservas(email, split[1]);
+                    Thread descontarSaldo = new Thread(
+                            new DescontaSaldo(
+                                    this.utilizadores,
+                                    email,
+                                    this.servidoresCloud.taxaServidor(nomeServidor),
+                                    servidoresCloud,
+                                    nomeServidor,
+                                    split[1])
+                    );
+
+                    descontarSaldo.start();
+                    serverM = "Ok";
+
+                }
+                else {
+                    this.utilizadores.adicionarReservas(email, split[1]);
+                    Thread descontarSaldo = new Thread(
+                            new DescontaSaldo(
+                                    this.utilizadores,
+                                    email,
+                                    this.servidoresCloud.taxaServidor(nomeServidor),
+                                    servidoresCloud,
+                                    nomeServidor,
+                                    split[1])
+                    );
+
+                    descontarSaldo.start();
+                    serverM = "Ok";
+                }
 
             }
             //MUDAR ISTO

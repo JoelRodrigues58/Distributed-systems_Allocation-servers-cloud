@@ -43,9 +43,29 @@ public class ServidoresCloud {
 
     }
 
+    public String leilaoParaPedido(ArrayList<ServidorCloud> servidorClouds){
+        double taxaMinima = 0.0;
+        int id = -1;
+        for(int i = 0; i < servidorClouds.size();i++){
+            if(servidorClouds.get(i).isOcupado() && servidorClouds.get(i).isLeilao()){
+                if(servidorClouds.get(i).getTaxaLeiloada() > taxaMinima){
+                    taxaMinima = servidorClouds.get(i).getTaxaLeiloada();
+                    id = i;
+                }
+            }
+        }
+
+        if (taxaMinima != 0.0){
+            servidorClouds.get(id).setLeilao(false);
+            return "2-"+servidorClouds.get(id).getNome()+" "+servidorClouds.get(id).getId();
+        }
+        else return null;
+    }
+
     public String reservarPedido(String nomeServidor){
         ArrayList<ServidorCloud> servidorClouds=null;
         String res=null;
+
 
         this.lockServidores.lock();
             servidorClouds = this.servidores.get(nomeServidor);
@@ -56,9 +76,12 @@ public class ServidoresCloud {
                 for(ServidorCloud servidorCloud : servidorClouds){
                         if(!servidorCloud.isOcupado()) {
                             servidorCloud.setOcupado(true);
-                            return nomeServidor+" "+servidorCloud.getId();
+                            return "1-"+nomeServidor+" "+servidorCloud.getId();
                         }
                 }
+                String leilaoParaPedido = leilaoParaPedido(servidorClouds);
+                if (leilaoParaPedido != null) return leilaoParaPedido;
+
                 return "TodosServidoresIndisponiveis";
             }
             else{
@@ -119,19 +142,22 @@ public class ServidoresCloud {
                 //Iniciar thread de atribuir o servidor às propostas
                 AtribuirServidores atribuirservidores = new AtribuirServidores(this.servidores.get(nomeServidor),utilizadores,this);
                 Thread atribuirservidoresThread = new Thread(atribuirservidores);
-                atribuirservidoresThread.run();
-                propostas.notify(); //NOTIFICAR quaNDO HA UMA PROPOSTA
-                
+                atribuirservidoresThread.start();
+
                 flag=true;
             }finally{
                 this.lockPropostas.unlock();
             }
+            System.out.println("acabei a rejistar proposta");
         }
 
         if(flag==false){
             p = this.propostas.get(nomeServidor);
             synchronized (p){
-                p.notify(); //NOTIFICAR QUANDO HA UMA PROPOSTA
+                if (!p.isEmpty()){
+                    p.notify();
+                }
+                 //NOTIFICAR QUANDO HA UMA PROPOSTA
                 this.lockPropostas.unlock();
                 
                 Proposta pr = verficarProposta(email,p);
@@ -306,7 +332,6 @@ public class ServidoresCloud {
                 this.lockPropostas.unlock();
                 System.out.println("SIZE PROPOSTAS: "+ propostas.size());
                 while (propostas == null || propostas.size() == 0) {
-                    
                     propostas.wait();
                 }
                 res = atualizaInformacao(servidores, propostas);

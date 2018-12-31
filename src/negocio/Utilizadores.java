@@ -187,6 +187,7 @@ public class Utilizadores {
             if(reservas!=null){
                 for(String res : reservas){
                     String[] id = res.split(" ");
+                    System.out.println("AQUI ESTA O MENINO  "+id[1]);
                     if(id[1].equals(idReserva)) {
                         reservas.remove(res);
                         return "Ok";
@@ -217,5 +218,14 @@ public class Utilizadores {
         }finally{
             utilizador.getL().unlock();
         }
+    }
+
+    public String verificarReserva(String idReserva){
+        for(Utilizador utilizador : this.utilizadores.values()){
+            for(String reserva : utilizador.getReservas()) {
+                if (reserva.equals(idReserva)) return utilizador.getEmail();
+            }
+        }
+        return null;
     }
 }
