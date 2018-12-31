@@ -69,11 +69,10 @@ public class TratarCliente implements Runnable {
             if(idReserva!=null && !idReserva.equals("ServidorInexistente") && !idReserva.equals("TodosServidoresIndisponiveis")) {
                 String[] split = idReserva.split("-");
                 if (split[0].equals("2")) {
-                    System.out.println("ENTREI AQUI");
                     String emailRemover = this.utilizadores.verificarReserva(split[1]);
 
                     this.utilizadores.retiraReserva(emailRemover,split[1].split(" ")[1]);
-
+                    
                     this.utilizadores.adicionarReservas(email, split[1]);
                     Thread descontarSaldo = new Thread(
                             new DescontaSaldo(
@@ -123,13 +122,12 @@ public class TratarCliente implements Runnable {
     public void reservaLeilao(String[]msgAut) throws IOException{
         String serverM;
         String nome_servidor = msgAut[1];
-        String licitacao = msgAut[2];
-                            
+        String licitacao = msgAut[2];  
         if(this.utilizadores.getSaldoCliente(email)>0){
-            String idReserva = this.servidoresCloud.reservarLeilao(utilizadores,nome_servidor, email, Double.parseDouble(licitacao));
+            String idReserva = this.servidoresCloud.reservarLeilao(utilizadores,nome_servidor, email, Double.parseDouble(licitacao));  
             if(!idReserva.equals("ServidorInexistente") && !idReserva.equals("LicitacaoBaixa") && !idReserva.equals("ServidoresOcupados")){
                 this.utilizadores.adicionarReservas(email, idReserva);
-
+                
                 Thread descontarSaldo = new Thread(
                         new DescontaSaldo(
                         this.utilizadores,
@@ -139,7 +137,7 @@ public class TratarCliente implements Runnable {
                         nome_servidor,
                         idReserva)
                 );
-
+                
                 descontarSaldo.start();
                 serverM="Ok";
             }
@@ -149,12 +147,10 @@ public class TratarCliente implements Runnable {
         }
         else{
             serverM="SaldoInsuficiente";
-        }
-
+        }  
         out.write(serverM);
         out.newLine();
         out.flush();
-
         System.out.println("O servidor respondeu: " + serverM);
     }
     

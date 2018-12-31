@@ -44,18 +44,18 @@ public class ServidoresCloud {
     }
 
     public String leilaoParaPedido(ArrayList<ServidorCloud> servidorClouds){
-        double taxaMinima = 0.0;
+        double taxaMinima = Double.MAX_VALUE;
         int id = -1;
         for(int i = 0; i < servidorClouds.size();i++){
             if(servidorClouds.get(i).isOcupado() && servidorClouds.get(i).isLeilao()){
-                if(servidorClouds.get(i).getTaxaLeiloada() > taxaMinima){
+                if(servidorClouds.get(i).getTaxaLeiloada() < taxaMinima){
                     taxaMinima = servidorClouds.get(i).getTaxaLeiloada();
                     id = i;
                 }
             }
         }
 
-        if (taxaMinima != 0.0){
+        if (taxaMinima != Double.MAX_VALUE){
             servidorClouds.get(id).setLeilao(false);
             return "2-"+servidorClouds.get(id).getNome()+" "+servidorClouds.get(id).getId();
         }
@@ -93,20 +93,29 @@ public class ServidoresCloud {
     public String reservarLeilao(Utilizadores utilizadores, String nomeServidor, String email, double licitacao){
         ArrayList<ServidorCloud> servidorClouds =null;
         boolean flag=false;
-        String res=null;
         //Um comentário aí pa ver depois. 
+
+        this.lockServidores.lock();
+
         this.lockServidores.lock();
             servidorClouds = this.servidores.get(nomeServidor);
+
         synchronized (servidorClouds){
             this.lockServidores.unlock();
+            
+
+            this.lockServidores.unlock();
             if(servidorClouds!=null){
+
                 double licitMin;
                 boolean tentouLicitar = false;
                 for(ServidorCloud servidorCloud : servidorClouds){
                     if(!servidorCloud.isOcupado() && flag==false) {
+
                     tentouLicitar = true;
                     licitMin = servidorCloud.getLicitacaoMinima();
                         if(licitacao >= licitMin) {
+
                             flag=true;
                             servidorCloud.setTaxaLeiloada(licitacao); //TIRAR ISTO, SE RETIRARMOS ESTA VARIÁVEL
                             servidorCloud.setLeilao(true);
@@ -115,8 +124,9 @@ public class ServidoresCloud {
                         }
                     }
                 }
-
+                System.out.println("Abacaxi");
                 if(!tentouLicitar) {
+
                     registarProposta(utilizadores,nomeServidor,email,licitacao);
                     return "ServidoresOcupados";
                 }
@@ -133,7 +143,10 @@ public class ServidoresCloud {
         ArrayList<Proposta> p = null;
 
         this.lockPropostas.lock();
+
+
         if(this.propostas.isEmpty() || !this.propostas.containsKey(nomeServidor)){
+
             try{
                 ArrayList<Proposta> propostas = new ArrayList<>();
                 propostas.add(proposta);
@@ -148,16 +161,16 @@ public class ServidoresCloud {
             }finally{
                 this.lockPropostas.unlock();
             }
-            System.out.println("acabei a rejistar proposta");
+
         }
 
         if(flag==false){
+
             p = this.propostas.get(nomeServidor);
+
             synchronized (p){
-                if (!p.isEmpty()){
-                    p.notify();
-                }
-                 //NOTIFICAR QUANDO HA UMA PROPOSTA
+
+                p.notify(); //NOTIFICAR QUANDO HA UMA PROPOSTA
                 this.lockPropostas.unlock();
                 
                 Proposta pr = verficarProposta(email,p);
@@ -318,7 +331,7 @@ public class ServidoresCloud {
     
     public String servidorParaProposta(ArrayList<ServidorCloud> servidores) throws InterruptedException{
         String res=null;
-        System.out.println("ENTREI NO SERVIDOR PARA PROPOSTA");
+        
         synchronized (servidores){
             while((servidoresDisponiveis(servidores))==0){
                 servidores.wait();
@@ -328,16 +341,15 @@ public class ServidoresCloud {
 
             ArrayList<Proposta> propostas = this.propostas.get(servidores.get(0).getNome());
             synchronized (propostas) {
-                System.out.println("ENTREI NO Syncornizdede");
                 this.lockPropostas.unlock();
-                System.out.println("SIZE PROPOSTAS: "+ propostas.size());
                 while (propostas == null || propostas.size() == 0) {
                     propostas.wait();
                 }
                 res = atualizaInformacao(servidores, propostas);
+                
             }
-            System.out.println("ACABEI O SERVIDOR PARA PROPOSTA");
         }
+        
         return res;
     }
 
