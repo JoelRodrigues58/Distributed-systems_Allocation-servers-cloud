@@ -124,10 +124,9 @@ public class ConsultarPropostas extends javax.swing.JFrame {
             try {
                 String propostas = proxy.consultarPropostas("6",nomeServidor);
                 if(!propostas.equals("Naohapropostas") && !propostas.equals("ServidorInexistente")){
-                    desenhaTabela(propostas);
-                    //this.setVisible(false);
-                    //ConsultarPropostas consultarproposta = new ConsultarPropostas(proxy,email,propostas,pos);
-                    //consultarproposta.setVisible(true);
+                    this.setVisible(false);
+                    ConsultarPropostas consultarproposta = new ConsultarPropostas(proxy,email,propostas,pos);
+                    consultarproposta.setVisible(true);
                 }
                 else if(propostas.equals("Naohapropostas")){
                     JOptionPane.showMessageDialog(null, "Não existem propostas para esse servidor");
@@ -163,8 +162,8 @@ public class ConsultarPropostas extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(scrollPane);
         
-        panel.setLocation(20, 150);
-        panel.setSize(450, 80);
+        panel.setLocation(20, 180);
+        panel.setSize(450, 120);
 
         this.getContentPane().setLayout(null);
         

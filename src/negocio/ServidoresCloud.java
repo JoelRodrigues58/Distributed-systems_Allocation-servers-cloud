@@ -165,7 +165,7 @@ public class ServidoresCloud {
         }
 
         if(flag==false){
-            System.out.println("OLA");
+            
             p = this.propostas.get(nomeServidor);
 
             synchronized (p){
@@ -277,20 +277,26 @@ public class ServidoresCloud {
         ArrayList<Proposta> propostas = this.propostas.get(nomeServidor);
         ArrayList<ServidorCloud> servidores = this.servidores.get(nomeServidor);
         
-        synchronized (servidores){
+        if(servidores==null) {
             this.lockServidores.unlock();
-            synchronized (propostas){
-                this.lockPropostas.unlock();
-                    if(propostas!=null && servidores!=null){
-                        for(Proposta p : propostas){
-                            res.append("-"+p.getLicitacao() + " " + p.getEmail());
-                        }
-                    }else if(servidores!=null){
-                    return "Naohapropostas";
-            
-                    }else return "ServidorInexistente";
-        
+            this.lockPropostas.unlock();
+            return "ServidorInexistente";
+        }
+        else if(propostas==null) {
+            this.lockServidores.unlock();
+            this.lockPropostas.unlock();
+            return "Naohapropostas";
+        }
+        else{
+            synchronized (servidores){
+                this.lockServidores.unlock();
+                synchronized (propostas){
+                    this.lockPropostas.unlock();
+                    for(Proposta p : propostas){
+                        res.append("-"+p.getLicitacao() + " " + p.getEmail());
+                    }
                     return res.toString();
+                }
             }
         }
     }

@@ -98,7 +98,6 @@ public class ServidorProxy {
         out.write(escolha + " " + nomeServidor);
         out.newLine();
         out.flush();
-
         String propostas = in.readLine();
         System.out.println("O cliente recebeu: " + propostas);
 
