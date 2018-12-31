@@ -144,7 +144,15 @@ public class Utilizadores {
         }
     }
     
-    public double descontarSaldo(String email,double taxa){
+    public boolean existeReserva(Utilizador utilizador,String idReserva){
+        for(String reserva : utilizador.getReservas()){
+            if(reserva.equals(idReserva)) return true;
+        }
+        return false;
+    }
+    
+
+    public String descontarSaldo(String email,double taxa, String idReserva){
         Utilizador utilizador = null;
         l.lock();
         try{
@@ -155,16 +163,19 @@ public class Utilizadores {
         }
         
         try{
+            if(!existeReserva(utilizador,idReserva)) return "SemReserva";
             double saldo_atual = utilizador.getMontante();
             double saldo_final = Double.sum(saldo_atual,-taxa);
             if(saldo_final>=0){
                 System.out.println("A descontar: " + taxa);
                 utilizador.setMontante(saldo_final);
+                return "ComSaldo";
             }else{
                 System.out.println("A descontar: "+ saldo_atual);
                 utilizador.setMontante(0.0);
+                return "SemSaldo";
             }
-            return saldo_final;
+
         }finally{
             utilizador.getL().unlock();
         }
@@ -187,7 +198,6 @@ public class Utilizadores {
             if(reservas!=null){
                 for(String res : reservas){
                     String[] id = res.split(" ");
-                    System.out.println("AQUI ESTA O MENINO  "+id[1]);
                     if(id[1].equals(idReserva)) {
                         reservas.remove(res);
                         return "Ok";

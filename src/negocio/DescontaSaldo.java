@@ -35,13 +35,16 @@ public class DescontaSaldo implements Runnable{
     public void run() {
         String[] idServidor = idReserva.split(" ");
         try {
+            
             while(!terminado){
                 sleep(5000);
-                double saldo = this.utilizadores.descontarSaldo(email, taxa);
-                if(saldo<0){
+                String resultado = this.utilizadores.descontarSaldo(email, taxa,idReserva);
+                if(resultado.equals("SemSaldo")){
                     terminado=true;
                     this.servidores.desocupaServidor(nomeServidor,Integer.parseInt(idServidor[1]));
                     this.utilizadores.retiraReserva(email,idReserva);
+                }else if(resultado.equals("SemReserva")){
+                    terminado=true;
                 }
             }
             
