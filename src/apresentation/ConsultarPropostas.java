@@ -1,4 +1,4 @@
-package apresentacao;
+package apresentation;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
@@ -9,8 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import negocio.Posicao;
-import negocio.ServidorProxy;
+import aplication.network.ServidorProxy;
 
 public class ConsultarPropostas extends javax.swing.JFrame {
     private static ServidorProxy proxy;

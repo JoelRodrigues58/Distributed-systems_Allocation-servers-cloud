@@ -1,8 +1,7 @@
 
-package apresentacao;
+package apresentation;
 
-import negocio.Posicao;
-import negocio.ServidorProxy;
+import aplication.network.ServidorProxy;
 
 public class TipoReserva extends javax.swing.JFrame {
     private static ServidorProxy proxy;

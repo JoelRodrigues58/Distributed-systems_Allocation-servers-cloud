@@ -1,8 +1,10 @@
-package negocio;
+package aplication.threads;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import aplication.data.ServidoresCloud;
+import aplication.data.Utilizadores;
 
 public class AtribuirServidores implements Runnable{
     private ServidoresCloud totalservidores;

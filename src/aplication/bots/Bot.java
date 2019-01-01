@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package negocio;
+package aplication.bots;
 
-import apresentacao.MenuInicial;
+import aplication.network.ServidorProxy;
+import apresentation.MenuInicial;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,10 +13,6 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author raphael
- */
 public class Bot implements Runnable{
 
     private String endereco;

@@ -1,4 +1,4 @@
-package negocio;
+package aplication.data;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;

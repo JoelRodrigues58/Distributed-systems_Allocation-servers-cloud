@@ -1,4 +1,4 @@
-package negocio;
+package aplication.threads;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -6,6 +6,8 @@ import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import aplication.data.ServidoresCloud;
+import aplication.data.Utilizadores;
 
 public class DescontaSaldo implements Runnable{
     private Utilizadores utilizadores;

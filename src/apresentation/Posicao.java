@@ -1,4 +1,4 @@
-package negocio;
+package apresentation;
 
 public class Posicao {
     private int x;

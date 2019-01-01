@@ -1,10 +1,9 @@
-package apresentacao;
+package apresentation;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import negocio.Posicao;
-import negocio.ServidorProxy;
+import aplication.network.ServidorProxy;
 
 
 public class MenuInicial extends javax.swing.JFrame {

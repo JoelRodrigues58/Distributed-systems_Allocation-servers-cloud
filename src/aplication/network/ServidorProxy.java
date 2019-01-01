@@ -1,4 +1,4 @@
-package negocio;
+package aplication.network;
 
 
 import java.io.BufferedReader;

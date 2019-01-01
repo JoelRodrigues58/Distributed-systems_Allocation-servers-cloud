@@ -1,5 +1,8 @@
-package negocio;
+package aplication.network;
 
+import aplication.data.Utilizadores;
+import aplication.data.ServidoresCloud;
+import aplication.threads.TratarCliente;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,14 +16,16 @@ public class Servidor {
 
     private int porta;
     private int nClients;
-    ServidoresCloud servidoresCloud;
-    Utilizadores utilizadores;
+    private ServidoresCloud servidoresCloud;
+    private Utilizadores utilizadores;
+    private ServidorSkeleton servidorSkeleton;
 
-    public Servidor(int porta, ServidoresCloud sC, Utilizadores uT){
+    public Servidor(int porta, ServidoresCloud sC, Utilizadores uT, ServidorSkeleton servidorSkeleton){
         this.porta = porta;
         this.nClients = 0;
         this.servidoresCloud = sC;
         this.utilizadores = uT;
+        this.servidorSkeleton=servidorSkeleton;
     }
 
     public void comecaServidor(){
@@ -36,7 +41,7 @@ public class Servidor {
 
                 Socket clSocket = serverSocket.accept();
 
-                TratarCliente tratarCliente = new TratarCliente(clSocket,this.servidoresCloud,this.utilizadores);
+                TratarCliente tratarCliente = new TratarCliente(clSocket,servidorSkeleton);
 
                 Thread tratarClienteThread = new Thread(tratarCliente);
 
@@ -57,6 +62,7 @@ public class Servidor {
         int porta = 12345;
         ServidoresCloud servidoresCloud = new ServidoresCloud();
         Utilizadores utilizadores = new Utilizadores();
+        ServidorSkeleton servidorSkeleton = new ServidorSkeleton(servidoresCloud,utilizadores);
         
         /*
         QUANDO SE QUISER UTILIZAR!!
@@ -84,7 +90,7 @@ public class Servidor {
         servidoresCloud.registarServidor("server3", 20.0, 7.0);
         servidoresCloud.registarServidor("server1", 10.0, 5.0);
         
-        Servidor servidor = new Servidor(porta,servidoresCloud,utilizadores);
+        Servidor servidor = new Servidor(porta,servidoresCloud,utilizadores,servidorSkeleton);
         
         servidor.comecaServidor();
     }

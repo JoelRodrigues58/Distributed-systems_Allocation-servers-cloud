@@ -1,6 +1,6 @@
-package negocio;
+package aplication.network;
 
-import apresentacao.MenuInicial;
+import apresentation.MenuInicial;
 import java.io.*;
 import java.net.Socket;
 
@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import apresentation.Posicao;
 
 public class Cliente {
     private String endereco;

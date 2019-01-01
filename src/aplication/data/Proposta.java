@@ -1,4 +1,4 @@
-package negocio;
+package aplication.data;
 
 public class Proposta {
 

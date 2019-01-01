@@ -1,4 +1,4 @@
-package apresentacao;
+package apresentation;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
@@ -11,8 +11,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import negocio.Posicao;
-import negocio.ServidorProxy;
+import aplication.network.ServidorProxy;
 
 public class Reservas extends javax.swing.JFrame {
     private static ServidorProxy proxy;
