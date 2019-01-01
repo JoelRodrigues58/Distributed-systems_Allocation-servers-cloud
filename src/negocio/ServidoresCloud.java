@@ -28,6 +28,9 @@ public class ServidoresCloud {
         return this.servidores;
     }
 
+    /*
+        Regista o nº de servidores fixos: nomeServidor, taxa a pagar, licitação mínima
+    */
     public synchronized void registarServidor(String nome, double taxa, double licitacaoMinima){
 
         ServidorCloud servidorCloud = new ServidorCloud(nome,taxa,proxId,licitacaoMinima);
@@ -45,6 +48,14 @@ public class ServidoresCloud {
 
     }
 
+    /*
+        Recebe uma lista de servidores, de um determinado tipo
+            Procura servidores (ocupados) e reservados por leilão.
+                Se encontrar algum, retorna o que reservou com menor licitação, 
+                para lhe desalocar o servidor: "2-nomeServidor idServidor"
+                Else retorna null, ou seja, nao ha servidores reservados por leilão. 
+    */
+    
     public String leilaoParaPedido(ArrayList<ServidorCloud> servidorClouds){
         double taxaMinima = Double.MAX_VALUE;
         int id = -1;
@@ -64,10 +75,17 @@ public class ServidoresCloud {
         else return null;
     }
 
+    /*
+        Efetuar reserva a pedido, para um determinado servidor:
+            Se encontrar algum desocupado, retorna "1-nomeServidor idServidor"
+            Senao encontrar nenhum, efetua a função leilaoParaPedido (para verificar 
+            se existe um de leilao para lhe retirar o servidor) 
+                Se for !=null retorna o resultado desta função
+                Else retorna TodosServidoresIndisponiveis
+            Se esse servidor nao existir, retorna ServidorInexistente
+    */
     public String reservarPedido(String nomeServidor){
         ArrayList<ServidorCloud> servidorClouds=null;
-        String res=null;
-
 
         this.lockServidores.lock();
             servidorClouds = this.servidores.get(nomeServidor);
@@ -91,21 +109,30 @@ public class ServidoresCloud {
             }
         }
     }
+    
+    /*
+        Efetuar reserva a leilão, para um determinado servidor, com uma licitação
+            Procura por um servidor desocupado: 
+                Se encontrar um desocupado e a sua licitação for maior que a licitação mínima
+                retorna "nomeServidor idServidor"
+                Se não encontrar um desocupado e a sua licitação for maior que a licitação mínima
+                efetua a função registarProposta, e retorna ServidoresOcupados
+                Se encontrou servidores desocupados e a sua licitação for menor que a licitação mínima
+                retorna LicitacaoBaixa
+                
+                Se esse servidor nao existir, retorna ServidorInexistente    
+    */
 
     public String reservarLeilao(Utilizadores utilizadores, String nomeServidor, String email, double licitacao){
         ArrayList<ServidorCloud> servidorClouds =null;
         boolean flag=false;
-        //Um comentário aí pa ver depois. 
-
-        this.lockServidores.lock();
 
         this.lockServidores.lock();
             servidorClouds = this.servidores.get(nomeServidor);
 
         synchronized (servidorClouds){
             this.lockServidores.unlock();
-
-            this.lockServidores.unlock();
+            
             if(servidorClouds!=null){
 
                 double licitMin;
@@ -135,7 +162,24 @@ public class ServidoresCloud {
             else return "ServidorInexistente";
         }
     }
+    
+    /*
+        Efetua o registo da proposta de um determinado utilizador, para um tipo de servidor (através da função anterior)
+            Cria uma proposta com uma licitação e um email.
+                Verifica se o HashMap de propostas está vazio ou se ainda não existem 
+                propostas para esse tipo de servidor:
+                    - Caso se verifique, adiciona a 1º proposta para esse servidor;
+                        Aqui, é iniciada a Thread AtribuirServidores para esse tipo de servidor 
+                        (thread para tentar alocar servidores disponíveis a propostas existentes)
+                    - Caso existam propostas, verifica se já existe uma proposta
+                    daquele utilizador para aquele tipo de servidor:
+                        -Se já fez uma proposta, tal é removida e inserida a nova.
+                        -Senão, apenas é inserida a atual proposta.
+                        
+                    - No fim, notifica a condição c1 (foi inserida uma proposta)
+    */
  
+    //NOTIFICAR TAMBEM DENTRO DO TRY!!!
     public void registarProposta(Utilizadores utilizadores,String nomeServidor, String email, double licitacao){
         System.out.println("ENTREI NO REGISTAR PROPOSTAS");
         Proposta proposta = new Proposta(licitacao,email);
@@ -185,6 +229,10 @@ public class ServidoresCloud {
    
     }
 
+    /*
+        Verifica se uma determinada proposta existe num conjunto de propostas, 
+        registada por um certo utilizador, com o email dado (utilizada na função anterior)
+    */
     public Proposta verficarProposta(String email, ArrayList<Proposta> propostas){
         Proposta res = null;
 
@@ -197,6 +245,11 @@ public class ServidoresCloud {
         return res;
     }
 
+    /*
+        Consultar servidores disponíveis:
+            Procura em todo o HashMap de Servidores e retorna para todos os tipos de servidor:
+                "-nomeServidor numeroDisponiveis numeroLeiloes taxaFixa licitacaoMinima-..."
+    */
     public String consultarDisponiveis(){
         StringBuilder stringBuilder = new StringBuilder();
         int nDisponiveis, nLeiloes;
@@ -226,6 +279,11 @@ public class ServidoresCloud {
         }
     }
     
+    /*
+        Retorna a taxa Fixa para um determinado tipo de servidor (utilizada na 
+        Thread DescontarSaldo, para se saber quanto descontar ao saldo do cliente 
+        por "cada hora".
+    */
     public double taxaServidor(String nomeServidor){
         this.lockServidores.lock();
         ArrayList<ServidorCloud> servidores = this.servidores.get(nomeServidor);
@@ -235,6 +293,16 @@ public class ServidoresCloud {
         }
     }
 
+    /*
+        Desocupa um certo tipo de servidor, dando-lhe o seu id como argumento 
+        (chamada na thread TratarCliente, quando a reserva de um determinado servidor
+        é retirada a um utilizador)
+           - Quando encontra o servidor com o id:
+                - Se foi anteriormente reservado como leilão, põe essa variável a false
+                  e a variável Ocupado a false
+                - Senão só põe a variável Ocupado a false
+           - No fim, notifica a condição c1 (servidor disponível)     
+    */
     public void desocupaServidor(String nomeServidor,int id){
         this.lockServidores.lock();
         ArrayList<ServidorCloud> servidores = this.servidores.get(nomeServidor);
@@ -254,6 +322,11 @@ public class ServidoresCloud {
         }
     }
     
+    
+    /*
+      Função utilizada como argumento na função desocupaServidor, pois, dado um
+        id de reserva, retorna o seu tipo de servidor (argumento na função anterior)
+    */
     //TIRAR PARTIDO DO ID do servidor (mudar interface??)
     public String servidorPorId(int id){
         this.lockServidores.lock();
@@ -270,6 +343,12 @@ public class ServidoresCloud {
         }
     }
     
+    /*
+        Função de consultar propostas existentes para um determinado tipo de servidor:
+            - Tipo de servidor inexistente, retorna: ServidorInexistente
+            - Não há propostas para esse tipo de servidor, retorna: Naohapropostas
+            - Senao retorna: "-Licitacao Email-..."
+    */
     public String propostasPorServidor(String nomeServidor){
         StringBuilder res = new StringBuilder();
         this.lockPropostas.lock();
@@ -363,7 +442,13 @@ public class ServidoresCloud {
         return res;
     }
 */
-
+    
+    /*
+      Se houver servidores disponiveis, segundo um tipo de servidor, e propostas
+        existentes para esse tipo de servidor, efetua a função atualizaInformação
+        (pôr o servidor a ocupado, eliminar a proposta e fazer a reserva para um cliente)
+        Caso contrario, adormece
+    */
     public String servidorParaProposta(String nomeServidor) throws InterruptedException{
         String res=null;
         this.lockServidores.lock();

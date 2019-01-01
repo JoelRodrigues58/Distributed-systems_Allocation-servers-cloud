@@ -11,8 +11,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import static java.lang.Thread.sleep;
 import java.net.Socket;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -65,6 +68,7 @@ public class Bot implements Runnable{
             String idReserva;
             
             while((escolha = r.nextInt(8)+1)>0){
+                sleep(3000);
                 switch(escolha){
                     case 1: 
                         // Reserva a pedido
@@ -131,6 +135,8 @@ public class Bot implements Runnable{
             
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Bot.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
