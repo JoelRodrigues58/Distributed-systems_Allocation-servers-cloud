@@ -60,8 +60,9 @@ public class Servidor {
 
     public static void main(String [] args){
         int porta = 12345;
-        ServidoresCloud servidoresCloud = new ServidoresCloud();
         Utilizadores utilizadores = new Utilizadores();
+        ServidoresCloud servidoresCloud = new ServidoresCloud(utilizadores);
+
         ServidorSkeleton servidorSkeleton = new ServidorSkeleton(servidoresCloud,utilizadores);
         
         /*

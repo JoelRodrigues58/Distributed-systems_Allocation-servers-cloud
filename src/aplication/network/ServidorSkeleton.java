@@ -109,7 +109,7 @@ public class ServidorSkeleton {
         String nome_servidor = msgAut[1];
         String licitacao = msgAut[2];  
         if(this.utilizadores.getSaldoCliente(email)>0){
-            String idReserva = this.servidoresCloud.reservarLeilao(utilizadores,nome_servidor, email, Double.parseDouble(licitacao));  
+            String idReserva = this.servidoresCloud.reservarLeilao(nome_servidor, email, Double.parseDouble(licitacao));  
             if(!idReserva.equals("ServidorInexistente") && !idReserva.equals("LicitacaoBaixa") && !idReserva.equals("ServidoresOcupados")){
                 this.utilizadores.adicionarReservas(email, idReserva);
                 
