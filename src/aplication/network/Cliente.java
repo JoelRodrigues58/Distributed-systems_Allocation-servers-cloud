@@ -13,8 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import apresentation.Posicao;
+import java.util.ArrayList;
 
-public class Cliente {
+public class Cliente{
     private String endereco;
     private int porta;
     private ServidorProxy proxy;
@@ -39,7 +40,7 @@ public class Cliente {
             
             // (0,0) -> (700,0) -> (700,700) -> (0,700)
             // (400,200) ~~ posicao central
-            Posicao pos = new Posicao(550,0);
+            Posicao pos = new Posicao(700,0);
             
             MenuInicial menuInicial = new MenuInicial(proxy,pos);
 
@@ -51,15 +52,21 @@ public class Cliente {
 
     }
 
-    
-    public static void main(String[] args){
+        public static void main(String[] args) throws InterruptedException{
 
-        String endereco = "localhost"; //127.0.0.1
-        int porta = 12345;
+            String endereco = "localhost"; //127.0.0.1
+            int porta = 12345;
 
-        Cliente cliente = new Cliente(endereco,porta);
-        
-        cliente.comecaCliente();
+            int nClientes = 2;
+            ArrayList<Posicao> posicoes= new ArrayList<Posicao>();
+            posicoes.add(new Posicao(0,0));
+            posicoes.add(new Posicao(700,0));
+            posicoes.add(new Posicao(700,700));
+            posicoes.add(new Posicao(0,700));
 
-    }
+            Cliente cliente = new Cliente(endereco,porta);
+            cliente.comecaCliente();
+            
+        }
+
 }

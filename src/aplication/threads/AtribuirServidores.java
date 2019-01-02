@@ -23,9 +23,24 @@ public class AtribuirServidores implements Runnable{
         while(true){
             try {
                 System.out.println("Entrei Thread Atribui servidores:" + this.nomeServidor);
-                String idReserva = this.totalservidores.procuraServidores(nomeServidor);
+                String idReserva = this.totalservidores.atribuirServidoresPropostas(nomeServidor);
                 String split[] = idReserva.split("-");
-                this.utilizadores.adicionarReservas(split[0], split[1]);
+                String email = split[0];
+                String reserva = split[1];
+                this.utilizadores.adicionarReservas(email, reserva);
+                
+                //FALTA DESCONTAR SALDO!!
+                 Thread descontarSaldo = new Thread(
+                            new DescontaSaldo(
+                                    this.utilizadores,
+                                    email,
+                                    this.totalservidores.taxaServidor(nomeServidor),
+                                    this.totalservidores,
+                                    nomeServidor,
+                                    reserva)
+                    );
+
+                    descontarSaldo.start();
                 
             } catch (InterruptedException ex) {
                 Logger.getLogger(AtribuirServidores.class.getName()).log(Level.SEVERE, null, ex);
