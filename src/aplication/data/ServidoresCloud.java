@@ -68,6 +68,7 @@ public class ServidoresCloud {
         }
 
         proxId++;
+        //FALTA NOTIFICAR QUE JA EXISTE SERVIDORES DISPONIVEIS!
         this.informacao.get(nome).servidores_disponiveis++;
         
         
@@ -164,25 +165,18 @@ public class ServidoresCloud {
 
         this.lock.lock();
         try{
-            System.out.println("Abacaxi");
             Informacao informacao = this.informacao.get(nomeServidor);
-            System.out.println("Banana");
             servidorClouds = informacao.servidores;
-            System.out.println("Pessego");
             
             informacao.lockServidores.lock();
-            System.out.println("Cenoura");
             boolean tentouLicitar = false;
             try{
                 double licitMin;
                 for(ServidorCloud servidorCloud : servidorClouds){
-                    System.out.println("Maracuja");
                     if(!servidorCloud.isOcupado()) { 
                     tentouLicitar = true;
                     licitMin = servidorCloud.getLicitacaoMinima();
-                        System.out.println("Morango");
                         if(licitacao >= licitMin) {
-                            System.out.println("KIWI");
                             servidorCloud.setTaxaLeiloada(licitacao); //TIRAR ISTO, SE RETIRARMOS ESTA VARIÁVEL
                             servidorCloud.setLeilao(true);
                             servidorCloud.setOcupado(true);
@@ -196,9 +190,9 @@ public class ServidoresCloud {
                 informacao.lockServidores.unlock();
             }
             if(!tentouLicitar) {
-                System.out.println("CONA");
+                System.out.println("Vou registar proposta...");
                 registarProposta(nomeServidor,email,licitacao);
-                System.out.println("PARRECA");
+                System.out.println("Registei proposta!");
                 return "ServidoresOcupados";
             }
 
@@ -230,13 +224,15 @@ public class ServidoresCloud {
  
     public void registarProposta(String nomeServidor, String email, double licitacao){
         Proposta proposta = new Proposta(licitacao,email);
-        ArrayList<Proposta> p = null;
         Informacao informacao =  this.informacao.get(nomeServidor);
+        ArrayList<Proposta> propostas = informacao.propostas;
         informacao.lockPropostas.lock();
         try{
-            Proposta pr = verficarProposta(email,p);
-            if(pr!=null){  p.remove(pr); }
-            p.add(proposta);
+            Proposta pr = verficarProposta(email,propostas);
+            if(pr!=null){  
+               propostas.remove(pr); 
+            }
+            propostas.add(proposta);
             informacao.lockServidores.lock();
             informacao.not_servidores.signal(); //NOTIFICAR QUANDO HA UMA PROPOSTA
             informacao.lockServidores.unlock();
@@ -393,11 +389,10 @@ public class ServidoresCloud {
         
         this.lock.lock();
         Informacao informacao =  this.informacao.get(nomeServidor);
-        ArrayList<ServidorCloud> servidores = informacao.servidores;
-        ArrayList<Proposta> propostas = informacao.propostas;
-        
         try{
+            ArrayList<ServidorCloud> servidores = informacao.servidores;
             informacao.lockServidores.lock();
+            ArrayList<Proposta> propostas = informacao.propostas;
             informacao.lockPropostas.lock();
             this.lock.unlock();
             if(propostas.size()==0) {
@@ -526,11 +521,12 @@ public class ServidoresCloud {
         informacao.lockServidores.lock();
         this.lock.unlock();
         try{ 
-             while(informacao.servidores_disponiveis==0 ){
+             while(informacao.servidores_disponiveis==0){
                  System.out.println("Estou a dormir não ha servidores");
                 informacao.not_servidores.await(); 
             }
             this.lock.lock();
+            System.out.println("Acordei... há propostas e servidores (procuraServidores)");
             informacao = this.informacao.get(nomeServidor);
             ArrayList<Proposta> propostas = informacao.propostas;
             informacao.lockPropostas.lock();
@@ -557,6 +553,7 @@ public class ServidoresCloud {
                 informacao.not_propostas.await(); 
             }
             this.lock.lock();
+            System.out.println("Acordei... há propostas e servidores (procuraPropostas)");
             informacao = this.informacao.get(nomeServidor);
             ArrayList<ServidorCloud> servidores = informacao.servidores;
             informacao.lockServidores.lock();
