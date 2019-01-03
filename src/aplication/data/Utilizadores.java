@@ -231,11 +231,54 @@ public class Utilizadores {
     }
 
     public String verificarReserva(String idReserva){
-        for(Utilizador utilizador : this.utilizadores.values()){
-            for(String reserva : utilizador.getReservas()) {
-                if (reserva.equals(idReserva)) return utilizador.getEmail();
+        l.lock();
+        try{
+            for(Utilizador utilizador : this.utilizadores.values()){
+                for(String reserva : utilizador.getReservas()) {
+                    if (reserva.equals(idReserva)) return utilizador.getEmail();
+                }
             }
+            return null;
+        }finally{
+            l.unlock();
         }
-        return null;
+    }
+    
+    public void inserirNotificacoes(String email, String notificacoes){
+        Utilizador utilizador = null;
+        StringBuilder sB = new StringBuilder();
+        l.lock();
+        try{
+            utilizador = this.utilizadores.get(email);
+            utilizador.getL().lock();
+        }finally{
+            l.unlock();
+        }
+        try{
+            String notAtuais = utilizador.getNotificacoes();
+            if(notAtuais!=null) sB.append(notAtuais);
+
+            sB.append(notificacoes);
+
+            utilizador.setNotificacoes(sB.toString());
+        }finally{
+            utilizador.getL().unlock();
+        }
+    }
+    
+    public String consultarNotificacoes(String email){
+        Utilizador utilizador = null;
+        l.lock();
+        try{
+            utilizador = this.utilizadores.get(email);
+            utilizador.getL().lock();
+        }finally{
+            l.unlock();
+        }
+        try{
+            return utilizador.getNotificacoes();
+        }finally{
+            utilizador.getL().unlock();
+        }
     }
 }

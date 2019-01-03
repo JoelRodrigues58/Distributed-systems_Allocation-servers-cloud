@@ -131,4 +131,14 @@ public class ServidorProxy {
         System.out.println("O cliente recebeu: " + serverM);
         return serverM;
     }
+    
+    public String consultarNotificacoes(String escolha)throws IOException{
+        out.write(""+escolha);
+        out.newLine();
+        out.flush();
+        String notificacoes = in.readLine();
+        System.out.println("O cliente recebeu: " + notificacoes);
+
+        return notificacoes;
+    }
 }

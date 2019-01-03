@@ -123,12 +123,13 @@ public class ServidoresCloud {
                             if(!servidorCloud.isOcupado()) {
                                 servidorCloud.setOcupado(true);
                                 informacao.servidores_disponiveis--;
+                                System.out.println("(reservaPedido - "+ nomeServidor+") servidores_disponiveis--");
                                 return "1-"+nomeServidor+" "+servidorCloud.getId();
                             }
                     }
                     String leilaoParaPedido = leilaoParaPedido(servidorClouds);
                     if (leilaoParaPedido != null) {
-                        informacao.servidores_disponiveis--;
+                        //System.out.println("(leilaoParaPedido - "+ nomeServidor+") servidores_disponiveis--");
                         return leilaoParaPedido;
                     }
 
@@ -175,19 +176,15 @@ public class ServidoresCloud {
                 
                 for(ServidorCloud servidorCloud : servidorClouds){
                     if(!servidorCloud.isOcupado()) {
-                        System.out.println("SERVIDOR DESOCUPADO");
-                        System.out.println("MAIOR QUE LICIT MIN");
                         servidorCloud.setTaxaLeiloada(licitacao); 
                         servidorCloud.setLeilao(true);
                         servidorCloud.setOcupado(true);
                         informacao.servidores_disponiveis--;
+                        System.out.println("(reservaLeilao - "+ nomeServidor+") servidores_disponiveis--");
                         return nomeServidor+" "+servidorCloud.getId();
                     }
                 }
-                
-                System.out.println("Vou registar proposta...");
                 registarProposta(nomeServidor,email,licitacao);
-                System.out.println("Registei proposta!");
                 return "ServidoresOcupados";
             }finally{
                 informacao.lockInformacao.unlock();
@@ -225,7 +222,8 @@ public class ServidoresCloud {
            propostas.remove(pr); 
         }
         propostas.add(proposta);
-        informacao.not_Servidores_or_Propostas.signal(); //VERIFICAR ALL OU NAO
+        informacao.not_Servidores_or_Propostas.signal();
+        System.out.println("(registarProposta) proposta.size++");//VERIFICAR ALL OU NAO
     } 
     
     /*
@@ -331,6 +329,7 @@ public class ServidoresCloud {
                 }
             }
             informacao.servidores_disponiveis++;
+            System.out.println("(desocupaServidor -"+ nomeServidor+") servidores_disponiveis++");
             informacao.not_Servidores_or_Propostas.signal(); // NOTIFICAR QUANDO HA SERVERES DIPONVEIS
         }finally{
             informacao.lockInformacao.unlock();
@@ -422,6 +421,7 @@ public class ServidoresCloud {
                 System.out.println("SERVIDOR DESOCUPADO!");
                 sC.setOcupado(true);
                 informacao.servidores_disponiveis--; //ESTAVA A FALTAR ISTO!!
+                System.out.println("(atualizaInformacao) servidores_disponiveis--");
                 servidorEscolhido=sC;
             }
         }
@@ -437,7 +437,7 @@ public class ServidoresCloud {
         
         informacao.propostas.remove(indiceMelhorProposta);
         
-        return email + "-"+ servidorEscolhido.getNome() + " " + servidorEscolhido.getId();
+        return email + "-"+ servidorEscolhido.getNome() + " " + servidorEscolhido.getId() + " " + licitacao;
         
     }
     
@@ -460,15 +460,15 @@ public class ServidoresCloud {
         //ArrayList<Proposta> propostas = informacao.propostas;
         this.lock.unlock();
         try{ 
-             System.out.println("[fora] servidores disponiveis = "+informacao.servidores_disponiveis);
-                 System.out.println("[fora] propostas size = "+informacao.propostas.size());
              while((informacao.servidores_disponiveis==0) || (informacao.propostas.size()==0)){
                  System.out.println("[dentro] servidores disponiveis ("+nomeServidor+")= "+informacao.servidores_disponiveis);
                  System.out.println("[dentro] propostas size ("+nomeServidor+")=  "+informacao.propostas.size());
                  System.out.println("Estou a dormir não ha servidores");
                 informacao.not_Servidores_or_Propostas.await(); 
             }
-            System.out.println("Acordei... há propostas e servidores (procuraServidores)");
+             System.out.println("[fora] servidores disponiveis = "+informacao.servidores_disponiveis);
+             System.out.println("[fora] propostas size = "+informacao.propostas.size());
+             System.out.println("Acordei... há propostas e servidores");
             
             res = atualizaInformacao(informacao);
             return res;

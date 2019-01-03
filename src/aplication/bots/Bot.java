@@ -48,7 +48,8 @@ public class Bot implements Runnable{
                 System.out.println(Thread.currentThread().getName()+" a efetuar: Registo.");
                 System.out.println("\t> Dados inseridos: "+dadosReg);
                 reg = this.proxy.efetuarRegisto("1",dadosReg);
-                System.out.println("\t\tServidor respondeu: "+reg);
+                System.out.println("\n");
+                //System.out.println("\t\tServidor respondeu: "+reg);
             }
             
             int escolha;
@@ -59,7 +60,17 @@ public class Bot implements Runnable{
             String montante;
             String idReserva;
             
-            while((escolha = r.nextInt(8)+1)>0){
+            // Depositar dinheiro
+            System.out.println(Thread.currentThread().getName()+" a efetuar: Depositar dinheiro.");
+            montante = "50000";
+            System.out.println("\t> Montante depositado: "+montante);
+            resposta = this.proxy.depositarMontante("5",montante);
+            System.out.println("\n");
+            //System.out.println("\tServidor respondeu: "+resposta);
+            
+            int []opcoes = new int[]{1,2,8};
+            
+            while((escolha = opcoes[r.nextInt(opcoes.length)])>0){
                 sleep(3000);
                 switch(escolha){
                     case 1: 
@@ -68,7 +79,8 @@ public class Bot implements Runnable{
                         nomeServidor="server"+(r.nextInt(3)+1); //Mudar isto depois para os servidores que temos
                         System.out.println("\t> Nome de servidor inserido: "+nomeServidor);
                         resposta = this.proxy.servidorPedido("1",nomeServidor);
-                        System.out.println("\t\tServidor respondeu: "+resposta);
+                        System.out.println("\n");
+                        //System.out.println("\t\tServidor respondeu: "+resposta);
                         break;
                     case 2:
                         // Reserva a leilão
@@ -78,41 +90,8 @@ public class Bot implements Runnable{
                         System.out.println("\t> Nome de servidor inserido: "+nomeServidor);
                         System.out.println("\t> Licitação inserida: "+licitacao);
                         resposta = this.proxy.servidorLeilao("2",nomeServidor,licitacao);
-                        System.out.println("\tServidor respondeu: "+resposta);
-                        break;
-                    case 3:
-                        // Consultar servidores disponiveis
-                        System.out.println(Thread.currentThread().getName()+" a efetuar: Consultar Servidores disponíveis.");
-                        resposta = this.proxy.servidoresDisponiveis("3 ");
-                        System.out.println("\tServidor respondeu: "+resposta);
-                        break;
-                    case 4:
-                        // Consultar Saldo
-                        System.out.println(Thread.currentThread().getName()+" a efetuar: Consultar saldo.");
-                        saldo = this.proxy.consultarSaldo("4 ");
-                        System.out.println("\tServidor respondeu: "+saldo);
-                        break;
-                    case 5:
-                        // Depositar dinheiro
-                        System.out.println(Thread.currentThread().getName()+" a efetuar: Depositar dinheiro.");
-                        montante = ""+r.nextInt(1000);
-                        System.out.println("\t> Montante depositado: "+montante);
-                        resposta = this.proxy.depositarMontante("5",montante);
-                        System.out.println("\tServidor respondeu: "+resposta);
-                        break;
-                    case 6:
-                        // Consultar propostas
-                        System.out.println(Thread.currentThread().getName()+" a efetuar: Consultar propostas.");
-                        nomeServidor = "server"+(r.nextInt(3)+1);
-                        System.out.println("\t> Nome de servidor inserido: "+nomeServidor);
-                        resposta = this.proxy.consultarPropostas("6",nomeServidor);
-                        System.out.println("\tServidor respondeu: "+resposta);
-                        break;
-                    case 7:
-                        //Consultar reservas de um cliente
-                        System.out.println(Thread.currentThread().getName()+" a efetuar: Consultar reservas.");
-                        resposta = this.proxy.consultarReservas("7 ");
-                        System.out.println("\tServidor respondeu: "+resposta);
+                        System.out.println("\n");
+                        //System.out.println("\tServidor respondeu: "+resposta);
                         break;
                     case 8:
                         // Terminar reserva
@@ -120,8 +99,10 @@ public class Bot implements Runnable{
                         idReserva = ""+r.nextInt(4);
                         System.out.println("\t> Id de Reserva inserido: "+idReserva);
                         resposta = this.proxy.terminarReserva("8",idReserva);
-                        System.out.println("\tServidor respondeu: "+resposta);
-                        break;       
+                        System.out.println("\n");
+                        //System.out.println("\tServidor respondeu: "+resposta);
+                        break;
+                    default: break;    
                 }
             }
             

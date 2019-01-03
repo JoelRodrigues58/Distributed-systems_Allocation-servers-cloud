@@ -4,6 +4,8 @@ import aplication.data.Utilizadores;
 import aplication.data.ServidoresCloud;
 import aplication.threads.DescontaSaldo;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class ServidorSkeleton {
     private ServidoresCloud servidoresCloud;
@@ -57,9 +59,26 @@ public class ServidorSkeleton {
                 String[] split = idReserva.split("-");
                 if (split[0].equals("2")) {
                     String emailRemover = this.utilizadores.verificarReserva(split[1]);
-
-                    this.utilizadores.retiraReserva(emailRemover,split[1].split(" ")[1]);
+                    //MANDAR NOTIFICAÇÃO
                     
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                    
+                    String parteSplit[] = split[1].split(" ");
+                    String tipoServidor = parteSplit[0];
+                    String id = parteSplit[1];
+                    
+                    StringBuilder sB = new StringBuilder();
+                    sB.append("$Foi lhe retirado um servidor do tipo "+tipoServidor);
+                    sB.append(", com ID = "+id);
+                    sB.append(" ( Data = "+ sdf.format(timestamp) +" )");
+                    String notificacoes = sB.toString();
+                    
+                    this.utilizadores.inserirNotificacoes(emailRemover,notificacoes);
+                    
+                    
+                    this.utilizadores.retiraReserva(emailRemover,split[1].split(" ")[1]);
+                }    
                     this.utilizadores.adicionarReservas(email, split[1]);
                     Thread descontarSaldo = new Thread(
                             new DescontaSaldo(
@@ -73,26 +92,8 @@ public class ServidorSkeleton {
 
                     descontarSaldo.start();
                     serverM = "Ok";
-
-                }
-                else {
-                    this.utilizadores.adicionarReservas(email, split[1]);
-                    Thread descontarSaldo = new Thread(
-                            new DescontaSaldo(
-                                    this.utilizadores,
-                                    email,
-                                    this.servidoresCloud.taxaServidor(nomeServidor),
-                                    servidoresCloud,
-                                    nomeServidor,
-                                    split[1])
-                    );
-
-                    descontarSaldo.start();
-                    serverM = "Ok";
-                }
-
             }
-            //MUDAR ISTO
+            
             else if(idReserva!=null && idReserva.equals("TodosServidoresIndisponiveis")){
                 serverM= "TodosServidoresIndisponiveis";
             }
@@ -170,5 +171,9 @@ public class ServidorSkeleton {
             }
             else serverM="IdInvalido";
         return serverM;                   
+    }
+    
+    public String consultarNotificacoes(String email){
+        return this.utilizadores.consultarNotificacoes(email);
     }
 }

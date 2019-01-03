@@ -156,6 +156,15 @@ public class TratarCliente implements Runnable {
                             out.flush();
                             System.out.println("O servidor respondeu: "+ resultado);
                             break;
+                        case 9:
+                            //Consultar notificacoes
+                            resultado = servidorSkeleton.consultarNotificacoes(email);
+                            if(resultado==null) resultado = "NaoHaNotificacoes";
+                            out.write(resultado);
+                            out.newLine();
+                            out.flush();
+                            System.out.println("O servidor respondeu: "+ resultado);
+                            break;
                             
                         default:
                             break;

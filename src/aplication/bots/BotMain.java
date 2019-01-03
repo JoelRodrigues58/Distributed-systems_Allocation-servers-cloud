@@ -6,7 +6,7 @@ public class BotMain {
         String endereco = "localhost"; //127.0.0.1
         int porta = 12345;
 
-        int nBots = 2;
+        int nBots = 5;
         
         System.out.println("=================BOTS====================");
         

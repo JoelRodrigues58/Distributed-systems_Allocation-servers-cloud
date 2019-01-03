@@ -9,6 +9,7 @@ public class Utilizador {
     private double montante;
     private boolean autenticado;
     private ArrayList<String> reservas;
+    private String notificacoes;
     private ReentrantLock l; 
 
     public Utilizador(String password, String email, double montante) {
@@ -22,6 +23,14 @@ public class Utilizador {
 
     public ReentrantLock getL() {
         return l;
+    }
+
+    public String getNotificacoes() {
+        return notificacoes;
+    }
+
+    public void setNotificacoes(String notificacoes) {
+        this.notificacoes = notificacoes;
     }
     
     public boolean isAutenticado() {
