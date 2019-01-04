@@ -29,7 +29,7 @@ public class ServidorProxy {
         return serverM;
     }
     
-     public String efetuarLogin(String escolha, String dados) throws IOException{
+    public String efetuarLogin(String escolha, String dados) throws IOException{
         out.write(escolha + " " + dados);
         out.newLine();
         out.flush();

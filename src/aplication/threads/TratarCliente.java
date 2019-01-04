@@ -27,7 +27,8 @@ public class TratarCliente implements Runnable {
         try {
 
             System.out.println("Conexão obtida com " + Thread.currentThread().getName() + "!");
-            String clientM, serverM, resultado;
+            String clientM, serverM, resultado, email_inserido, password,
+                    nomeServidor, licitacao, montante, idReserva;
 
             while ((clientM = in.readLine()) != null) {
 
@@ -40,7 +41,9 @@ public class TratarCliente implements Runnable {
                     switch (escolha) {
                         case 1:
                             //Efetuar registo
-                            resultado = servidorSkeleton.efetuarRegisto(msg);
+                            email_inserido = msg[1];
+                            password = msg[2];
+                            resultado = servidorSkeleton.efetuarRegisto(email_inserido,password);
                             if(resultado.equals("Erro")) serverM="Not Ok";
                             else {
                                 serverM="Ok";
@@ -55,7 +58,9 @@ public class TratarCliente implements Runnable {
 
                         case 2:
                             //Efetuar login
-                            resultado = servidorSkeleton.efetuarLogin(msg);
+                            email_inserido = msg[1];
+                            password = msg[2];
+                            resultado = servidorSkeleton.efetuarLogin(email_inserido,password);
                             if(resultado.equals("Erro")) serverM="Not Ok";
                             else {
                                 serverM="Ok";
@@ -88,7 +93,8 @@ public class TratarCliente implements Runnable {
                             
                         case 1:
                             //Reserva a pedido
-                            resultado = servidorSkeleton.reservaPedido(msgAut,email);
+                            nomeServidor = msgAut[1];
+                            resultado = servidorSkeleton.reservaPedido(nomeServidor,email);
                             out.write(resultado);
                             out.newLine();
                             out.flush();
@@ -97,7 +103,9 @@ public class TratarCliente implements Runnable {
 
                         case 2:
                             //Reserva Leilão
-                            resultado = servidorSkeleton.reservaLeilao(msgAut,email);
+                            nomeServidor = msgAut[1];
+                            licitacao = msgAut[2]; 
+                            resultado = servidorSkeleton.reservaLeilao(nomeServidor,licitacao,email);
                             out.write(resultado);
                             out.newLine();
                             out.flush();
@@ -106,7 +114,7 @@ public class TratarCliente implements Runnable {
                             
                         case 3:
                             //Consultar servidores disponiveis
-                            resultado = servidorSkeleton.consultarDisponiveis(msgAut,email);
+                            resultado = servidorSkeleton.consultarDisponiveis(email);
                             out.write(resultado);
                             out.newLine();
                             out.flush();
@@ -115,7 +123,7 @@ public class TratarCliente implements Runnable {
                             
                         case 4:
                             //Consultar Saldo
-                            Double saldo = servidorSkeleton.consultarConta(msgAut,email);
+                            Double saldo = servidorSkeleton.consultarConta(email);
                             out.write(saldo.toString());
                             out.newLine();
                             out.flush();
@@ -123,7 +131,7 @@ public class TratarCliente implements Runnable {
                             break;
                         case 5:
                             //Depositar dinheiro
-                            String montante = msgAut[1];
+                            montante = msgAut[1];
                             Double montante_atual = servidorSkeleton.depositarDinheiro(email, montante);
                             out.write(montante_atual.toString());
                             out.newLine();
@@ -132,8 +140,8 @@ public class TratarCliente implements Runnable {
                             break;
                         case 6: 
                             //Consultar propostas
-                            String servidor = msgAut[1];
-                            resultado = servidorSkeleton.propostasPorServidor(servidor);
+                            nomeServidor = msgAut[1];
+                            resultado = servidorSkeleton.propostasPorServidor(nomeServidor);
                             out.write(resultado);
                             out.newLine();
                             out.flush();
@@ -149,8 +157,8 @@ public class TratarCliente implements Runnable {
                             break;
                         case 8:
                             //Terminar reserva
-                            int id = Integer.parseInt(msgAut[1]);
-                            resultado = servidorSkeleton.retiraReserva(email, msgAut[1]);
+                            idReserva = msgAut[1];
+                            resultado = servidorSkeleton.retiraReserva(email, idReserva);
                             out.write(resultado);
                             out.newLine();
                             out.flush();

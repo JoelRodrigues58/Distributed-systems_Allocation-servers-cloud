@@ -16,10 +16,8 @@ public class ServidorSkeleton {
         this.utilizadores = utilizadores;
     }
     
-    public String efetuarRegisto(String[] msg){
+    public String efetuarRegisto(String email, String password){
         String serverM;
-        String email = msg[1];
-        String password = msg[2];
         boolean registo = this.utilizadores.registar(email, password);
 
         if (registo) {
@@ -32,10 +30,8 @@ public class ServidorSkeleton {
         
     }
     
-    public String efetuarLogin(String[] msg){
-        String password, serverM;
-        String email = msg[1];
-        password = msg[2];
+    public String efetuarLogin(String email, String password){
+        String serverM;
 
         boolean login = this.utilizadores.autenticar(email, password);
 
@@ -48,9 +44,9 @@ public class ServidorSkeleton {
 
     }
     
-    public String reservaPedido(String[] msgAut,String email){
+    public String reservaPedido(String nomeServidor,String email){
         String serverM, idReserva;
-        String nomeServidor = msgAut[1];
+        
         if(this.utilizadores.getSaldoCliente(email)>0){
 
             idReserva = this.servidoresCloud.reservarPedido(nomeServidor);
@@ -105,10 +101,9 @@ public class ServidorSkeleton {
       
     }
     
-    public String reservaLeilao(String[]msgAut,String email){
+    public String reservaLeilao(String nome_servidor, String licitacao,String email){
         String serverM;
-        String nome_servidor = msgAut[1];
-        String licitacao = msgAut[2];  
+ 
         if(this.utilizadores.getSaldoCliente(email)>0){
             String idReserva = this.servidoresCloud.reservarLeilao(nome_servidor, email, Double.parseDouble(licitacao));  
             if(!idReserva.equals("ServidorInexistente") && !idReserva.contains("LicitacaoBaixa") && !idReserva.equals("ServidoresOcupados")){
@@ -137,11 +132,11 @@ public class ServidorSkeleton {
         return serverM;
     }
     
-    public String consultarDisponiveis(String[]msgAut,String email){
+    public String consultarDisponiveis(String email){
         return this.servidoresCloud.consultarDisponiveis();
     }
     
-    public Double consultarConta(String[]msgAut,String email){
+    public Double consultarConta(String email){
         return this.utilizadores.consultarConta(email);
     }
     
