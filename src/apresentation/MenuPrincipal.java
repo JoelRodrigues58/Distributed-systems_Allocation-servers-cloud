@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import aplication.network.ServidorProxy;
+import javax.swing.JPanel;
 
 
 public class MenuPrincipal extends javax.swing.JFrame {
@@ -244,7 +245,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(notificacoes)
                             .addComponent(jLabel11))))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -279,7 +280,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             Double saldo = proxy.consultarSaldo("4 ");
-            JOptionPane.showMessageDialog(null, "O seu saldo é: " + saldo+ " €");
+            JOptionPane.showMessageDialog(this, "O seu saldo é: " + saldo+ " €");
         } catch (IOException ex) {
             Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -324,10 +325,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
             // TODO add your handling code here:
             String notificacoes = proxy.consultarNotificacoes("9 ");
             if(!notificacoes.equals("NaoHaNotificacoes")){
-                JOptionPane.showMessageDialog(null, "As suas notificações são: \n" + notificacoes.replace("$", "\n"));
+                JOptionPane.showMessageDialog(this, "As suas notificações são: \n" + notificacoes.replace("$", "\n"));
             }
             else{
-                JOptionPane.showMessageDialog(null, "Não tem notificações!");
+                JOptionPane.showMessageDialog(this, "Não tem notificações!",null,JOptionPane.WARNING_MESSAGE);
             }
         } catch (IOException ex) {
             Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);

@@ -14,25 +14,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Bot implements Runnable{
+public static final String ANSI_RESET = "\u001B[0m";
+
 
     private String endereco;
     private int porta;
     private ServidorProxy proxy;
     private int id;
+    private String cor;
     
-    public Bot(String endereco, int porta, int id){
+    public Bot(String endereco, int porta, int id,String cor){
         this.endereco = endereco;
         this.porta = porta;
         this.id = id;
+        this.cor=cor;
     }
     
     @Override
     public void run() {
         
         try {
-            System.out.println("A tentar obter conexão... "+Thread.currentThread().getName());
+            System.out.println(cor+cor+"A tentar obter conexão... "+Thread.currentThread().getName()+ANSI_RESET);
             Socket socket = new Socket(endereco, porta);
-            System.out.println("Conexão obtida com "+Thread.currentThread().getName()+"!");
+            System.out.println(cor+cor+ "Conexão obtida com "+Thread.currentThread().getName()+"!"+ ANSI_RESET);
             
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -45,11 +49,11 @@ public class Bot implements Runnable{
             String dadosReg = email+" "+passw;
             String reg="Not Ok";
             while(!reg.equals("Ok")){
-                System.out.println(Thread.currentThread().getName()+" a efetuar: Registo.");
-                System.out.println("\t> Dados inseridos: "+dadosReg);
+                System.out.println(cor+Thread.currentThread().getName()+" a efetuar: Registo."+ ANSI_RESET);
+                System.out.println(cor+"\t> Dados inseridos: "+dadosReg);
                 reg = this.proxy.efetuarRegisto("1",dadosReg);
-                System.out.println("\n");
-                //System.out.println("\t\tServidor respondeu: "+reg);
+                System.out.println(cor+"\n"+ ANSI_RESET);
+                //System.out.println(cor+"\t\tServidor respondeu: "+reg);
             }
             
             int escolha;
@@ -61,12 +65,12 @@ public class Bot implements Runnable{
             String idReserva;
             
             // Depositar dinheiro
-            System.out.println(Thread.currentThread().getName()+" a efetuar: Depositar dinheiro.");
+            System.out.println(cor+Thread.currentThread().getName()+" a efetuar: Depositar dinheiro."+ ANSI_RESET);
             montante = "50000";
-            System.out.println("\t> Montante depositado: "+montante);
+            System.out.println(cor+"\t> Montante depositado: "+montante);
             resposta = this.proxy.depositarMontante("5",montante);
-            System.out.println("\n");
-            //System.out.println("\tServidor respondeu: "+resposta);
+            System.out.println(cor+"\n"+ ANSI_RESET);
+            //System.out.println(cor+"\tServidor respondeu: "+resposta);
             
             int []opcoes = new int[]{1,2,8};
             
@@ -75,32 +79,32 @@ public class Bot implements Runnable{
                 switch(escolha){
                     case 1: 
                         // Reserva a pedido
-                        System.out.println(Thread.currentThread().getName()+" a efetuar: Reserva a pedido.");
+                        System.out.println(cor+Thread.currentThread().getName()+" a efetuar: Reserva a pedido."+ ANSI_RESET);
                         nomeServidor="server"+(r.nextInt(3)+1); //Mudar isto depois para os servidores que temos
-                        System.out.println("\t> Nome de servidor inserido: "+nomeServidor);
+                        System.out.println(cor+"\t> Nome de servidor inserido: "+nomeServidor);
                         resposta = this.proxy.servidorPedido("1",nomeServidor);
-                        System.out.println("\n");
-                        //System.out.println("\t\tServidor respondeu: "+resposta);
+                        System.out.println(cor+"\n"+ ANSI_RESET);
+                        //System.out.println(cor+"\t\tServidor respondeu: "+resposta);
                         break;
                     case 2:
                         // Reserva a leilão
-                        System.out.println(Thread.currentThread().getName()+" a efetuar: Reserva a leilão.");
+                        System.out.println(cor+Thread.currentThread().getName()+" a efetuar: Reserva a leilão."+ ANSI_RESET);
                         nomeServidor="server"+(r.nextInt(3)+1);
                         licitacao = ""+r.nextInt(15);
-                        System.out.println("\t> Nome de servidor inserido: "+nomeServidor);
-                        System.out.println("\t> Licitação inserida: "+licitacao);
+                        System.out.println(cor+"\t> Nome de servidor inserido: "+nomeServidor);
+                        System.out.println(cor+"\t> Licitação inserida: "+licitacao);
                         resposta = this.proxy.servidorLeilao("2",nomeServidor,licitacao);
-                        System.out.println("\n");
-                        //System.out.println("\tServidor respondeu: "+resposta);
+                        System.out.println(cor+"\n"+ ANSI_RESET);
+                        //System.out.println(cor+"\tServidor respondeu: "+resposta);
                         break;
                     case 8:
                         // Terminar reserva
-                        System.out.println(Thread.currentThread().getName()+" a efetuar: Terminar reserva.");
+                        System.out.println(cor+Thread.currentThread().getName()+" a efetuar: Terminar reserva."+ ANSI_RESET);
                         idReserva = ""+r.nextInt(4);
-                        System.out.println("\t> Id de Reserva inserido: "+idReserva);
+                        System.out.println(cor+"\t> Id de Reserva inserido: "+idReserva);
                         resposta = this.proxy.terminarReserva("8",idReserva);
-                        System.out.println("\n");
-                        //System.out.println("\tServidor respondeu: "+resposta);
+                        System.out.println(cor+"\n"+ ANSI_RESET);
+                        //System.out.println(cor+"\tServidor respondeu: "+resposta);
                         break;
                     default: break;    
                 }

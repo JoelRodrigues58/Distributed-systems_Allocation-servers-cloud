@@ -33,6 +33,7 @@ public class Login extends javax.swing.JFrame {
         login1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(550, 400));
 
         sair.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         sair.setText("Sair");
@@ -141,7 +142,7 @@ public class Login extends javax.swing.JFrame {
                     this.setVisible(false);
                 }
                 else{
-                JOptionPane.showMessageDialog(null, "Email ou password incorreto.");
+                JOptionPane.showMessageDialog(this, "Email ou password incorreto.",null,JOptionPane.ERROR_MESSAGE);
                 email.setText("");
                 password.setText("");
                 }
@@ -150,7 +151,7 @@ public class Login extends javax.swing.JFrame {
                     Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else {
-            JOptionPane.showMessageDialog(null, "Todos os campos são obrigatórios.");
+            JOptionPane.showMessageDialog(this, "Todos os campos são obrigatórios.",null,JOptionPane.ERROR_MESSAGE);
             email.setText("");
             password.setText("");
         }

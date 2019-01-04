@@ -184,33 +184,34 @@ public class Reservar_Leilao extends javax.swing.JFrame {
                String resultado = this.proxy.servidorLeilao("2", servidor_escolhido,licitacao_escolhida);
                
                if(resultado.equals("ServidoresOcupados")){
-                    JOptionPane.showMessageDialog(null, "Servidor ocupado. A sua proposta foi registada.");
+                    JOptionPane.showMessageDialog(this, "Servidor ocupado. \nA sua proposta foi registada.");
                     this.licitacao.setText("");
                     this.tipo_servidor.setText("");
                }else if(resultado.equals("ServidorInexistente")){
-                    JOptionPane.showMessageDialog(null, "Insira um tipo de servidor correto.");
+                    JOptionPane.showMessageDialog(this, "Insira um tipo de servidor correto.",null,JOptionPane.ERROR_MESSAGE);
                     this.licitacao.setText("");
                     this.tipo_servidor.setText("");
-               }else if(resultado.equals("LicitacaoBaixa")){
-                    JOptionPane.showMessageDialog(null, "A sua licitação é inferior à taxa miníma exigida pelo servidor.");
+               }else if(resultado.contains("LicitacaoBaixa")){
+                   String[] split = resultado.split(" ");
+                    JOptionPane.showMessageDialog(this, "A sua licitação é inferior à taxa miníma exigida pelo servidor.\n\t\t" + servidor_escolhido +": " +split[1] + "€ taxa mínima!",null,JOptionPane.ERROR_MESSAGE);
                     this.licitacao.setText("");
                }else if(resultado.equals("SaldoInsuficiente")){
-                   JOptionPane.showMessageDialog(null, "Não tem saldo suficiente para efetuar essa proposta.");
+                   JOptionPane.showMessageDialog(this, "Não tem saldo suficiente para efetuar essa proposta.",null,JOptionPane.ERROR_MESSAGE);
                    this.licitacao.setText("");
                }
                else {
-                    JOptionPane.showMessageDialog(null, "Servidor reservado com sucesso!");
+                    JOptionPane.showMessageDialog(this, "Servidor reservado com sucesso!");
                     this.tipo_servidor.setText("");
                     this.licitacao.setText("");
                }
             }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "Insira uma licitação válida.");
+                JOptionPane.showMessageDialog(this, "Insira uma licitação válida.",null,JOptionPane.ERROR_MESSAGE);
                 this.tipo_servidor.setText("");
             } catch (IOException ex) {
                 Logger.getLogger(Reservar_Leilao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else {
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos.");
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos.",null,JOptionPane.ERROR_MESSAGE);
             this.licitacao.setText("");
             this.tipo_servidor.setText("");
         }

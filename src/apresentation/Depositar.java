@@ -165,16 +165,16 @@ public class Depositar extends javax.swing.JFrame {
             try{
                Double.parseDouble(montante_inserido);
                String saldo_recebido = this.proxy.depositarMontante("5", montante_inserido);
-               JOptionPane.showMessageDialog(null, "Depósito efetuado com sucesso. Tem neste momento: " +saldo_recebido + " €");
+               JOptionPane.showMessageDialog(this, "Depósito efetuado com sucesso. \nTem neste momento: " +saldo_recebido + " €");
                this.montante.setText("");
             }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "Insira um valor numério.");
+                JOptionPane.showMessageDialog(this, "Insira um valor numério.",null,JOptionPane.ERROR_MESSAGE);
                 this.montante.setText("");
             } catch (IOException ex) {
                 Logger.getLogger(Depositar.class.getName()).log(Level.SEVERE, null, ex);
             }        
         }else {
-            JOptionPane.showMessageDialog(null, "Insira um valor numério.");
+            JOptionPane.showMessageDialog(this, "Insira um valor numério.",null,JOptionPane.ERROR_MESSAGE);
             this.montante.setText("");
         }
     }//GEN-LAST:event_confirmarActionPerformed

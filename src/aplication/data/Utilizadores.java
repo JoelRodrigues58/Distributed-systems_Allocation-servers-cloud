@@ -167,11 +167,11 @@ public class Utilizadores {
             double saldo_atual = utilizador.getMontante();
             double saldo_final = Double.sum(saldo_atual,-taxa);
             if(saldo_final>=0){
-                System.out.println("A descontar: " + taxa);
+                System.out.println("... a descontar: " + taxa + "  -> " + utilizador.getEmail());
                 utilizador.setMontante(saldo_final);
                 return "ComSaldo";
             }else{
-                System.out.println("A descontar: "+ saldo_atual);
+                System.out.println("... a descontar: "+ saldo_atual+ "  -> " + utilizador.getEmail());
                 utilizador.setMontante(0.0);
                 return "SemSaldo";
             }

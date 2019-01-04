@@ -38,7 +38,7 @@ public class ServidorProxy {
     }
      
     public void desligarConexao() throws IOException{
-        System.out.println("==========Conexão terminada============");
+        System.out.println("============Conexão terminada==============");
         socket.shutdownOutput();
         socket.shutdownInput();
         socket.close();
@@ -56,7 +56,7 @@ public class ServidorProxy {
         out.newLine();
         out.flush();
         String serverM = in.readLine();
-        System.out.println("O cliente recebeu: " + serverM);
+        System.out.println("\t>O cliente recebeu: " + serverM);
         return serverM;
     }
     
@@ -65,7 +65,7 @@ public class ServidorProxy {
         out.newLine(); 
         out.flush();
         String serverM = in.readLine();
-        System.out.println("O cliente recebeu: " + serverM);
+        System.out.println("\t>O cliente recebeu: " + serverM);
         return serverM;
     }
     
@@ -75,7 +75,7 @@ public class ServidorProxy {
         out.flush();
 
         String serverM = in.readLine();
-        System.out.println("O cliente recebeu: " + serverM);
+        System.out.println("\t>O cliente recebeu: " + serverM);
         double saldo = Double.parseDouble(serverM);
         
         return saldo;
@@ -89,7 +89,7 @@ public class ServidorProxy {
 
         String disponiveis = in.readLine();
         
-        System.out.println("O cliente recebeu:: " + disponiveis);
+        System.out.println("\t>O cliente recebeu:: " + disponiveis);
        
         return disponiveis;
     }
@@ -99,7 +99,7 @@ public class ServidorProxy {
         out.newLine();
         out.flush();
         String propostas = in.readLine();
-        System.out.println("O cliente recebeu: " + propostas);
+        System.out.println("\t>O cliente recebeu: " + propostas);
 
         return propostas;
     }
@@ -109,7 +109,7 @@ public class ServidorProxy {
         out.newLine();
         out.flush();
         String reservas = in.readLine();
-        System.out.println("O cliente recebeu: " + reservas);
+        System.out.println("\t>O cliente recebeu: " + reservas);
 
         return reservas;
     }
@@ -119,7 +119,7 @@ public class ServidorProxy {
         out.newLine();
         out.flush();
         String serverM = in.readLine();
-        System.out.println("O cliente recebeu: " + serverM);
+        System.out.println("\t>O cliente recebeu: " + serverM);
         return serverM;
     }
     
@@ -128,7 +128,7 @@ public class ServidorProxy {
         out.newLine();
         out.flush();
         String serverM = in.readLine();
-        System.out.println("O cliente recebeu: " + serverM);
+        System.out.println("\t>O cliente recebeu: " + serverM);
         return serverM;
     }
     
@@ -137,7 +137,7 @@ public class ServidorProxy {
         out.newLine();
         out.flush();
         String notificacoes = in.readLine();
-        System.out.println("O cliente recebeu: " + notificacoes);
+        System.out.println("\t>O cliente recebeu: " + notificacoes);
 
         return notificacoes;
     }

@@ -50,7 +50,7 @@ public class TratarCliente implements Runnable {
                             out.write(serverM);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: " + serverM);
+                            System.out.println("\t>O servidor respondeu: " + serverM);
                             break;
 
                         case 2:
@@ -65,7 +65,7 @@ public class TratarCliente implements Runnable {
                             out.write(serverM);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: " + serverM);
+                            System.out.println("\t>O servidor respondeu: " + serverM);
                             break;
 
                         default:
@@ -92,7 +92,7 @@ public class TratarCliente implements Runnable {
                             out.write(resultado);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: " + resultado);
+                            System.out.println("\t>O servidor respondeu: " + resultado);
                             break;
 
                         case 2:
@@ -101,7 +101,7 @@ public class TratarCliente implements Runnable {
                             out.write(resultado);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: " + resultado);
+                            System.out.println("\t>O servidor respondeu: " + resultado);
                             break;
                             
                         case 3:
@@ -110,7 +110,7 @@ public class TratarCliente implements Runnable {
                             out.write(resultado);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: " + resultado);
+                            System.out.println("\t>O servidor respondeu: " + resultado);
                             break;
                             
                         case 4:
@@ -119,7 +119,7 @@ public class TratarCliente implements Runnable {
                             out.write(saldo.toString());
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: " + saldo.toString());
+                            System.out.println("\t>O servidor respondeu: " + saldo.toString());
                             break;
                         case 5:
                             //Depositar dinheiro
@@ -128,7 +128,7 @@ public class TratarCliente implements Runnable {
                             out.write(montante_atual.toString());
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: "+ montante_atual.toString());
+                            System.out.println("\t>O servidor respondeu: "+ montante_atual.toString());
                             break;
                         case 6: 
                             //Consultar propostas
@@ -137,7 +137,7 @@ public class TratarCliente implements Runnable {
                             out.write(resultado);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: "+ resultado);
+                            System.out.println("\t>O servidor respondeu: "+ resultado);
                             break;
                         case 7:
                             //Consultar reservas de um cliente
@@ -145,7 +145,7 @@ public class TratarCliente implements Runnable {
                             out.write(resultado);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: "+ resultado);
+                            System.out.println("\t>O servidor respondeu: "+ resultado);
                             break;
                         case 8:
                             //Terminar reserva
@@ -154,7 +154,7 @@ public class TratarCliente implements Runnable {
                             out.write(resultado);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: "+ resultado);
+                            System.out.println("\t>O servidor respondeu: "+ resultado);
                             break;
                         case 9:
                             //Consultar notificacoes
@@ -163,7 +163,7 @@ public class TratarCliente implements Runnable {
                             out.write(resultado);
                             out.newLine();
                             out.flush();
-                            System.out.println("O servidor respondeu: "+ resultado);
+                            System.out.println("\t>O servidor respondeu: "+ resultado);
                             break;
                             
                         default:

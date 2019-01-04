@@ -159,23 +159,23 @@ public class Reservar_Pedido extends javax.swing.JFrame {
             try {
                 String resposta = this.proxy.servidorPedido("1", tipo_servidor);
                 if(resposta.equals("TodosServidoresIndisponiveis")){
-                     JOptionPane.showMessageDialog(null, "Não existem servidores disponíveis desse tipo.");
+                     JOptionPane.showMessageDialog(this, "Não existem servidores disponíveis desse tipo.",null,JOptionPane.ERROR_MESSAGE);
                 }else if(resposta.equals("ServidorInexistente")){
-                    JOptionPane.showMessageDialog(null, "Insira um tipo de servidor correto.");
+                    JOptionPane.showMessageDialog(this, "Insira um tipo de servidor correto.",null,JOptionPane.ERROR_MESSAGE);
                     this.tipo_servidor.setText("");
                 }else if(resposta.equals("DinheiroInsuficiente")){
-                    JOptionPane.showMessageDialog(null, "Não tem saldo suficiente para efetuar a reserva.");
+                    JOptionPane.showMessageDialog(this, "Não tem saldo suficiente para efetuar a reserva.",null,JOptionPane.ERROR_MESSAGE);
                     this.tipo_servidor.setText("");
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "Servidor reservado com sucesso!");
+                    JOptionPane.showMessageDialog(this, "Servidor reservado com sucesso!");
                     this.tipo_servidor.setText("");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Reservar_Pedido.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else{
-            JOptionPane.showMessageDialog(null, "Insira um tipo de servidor correto.");
+            JOptionPane.showMessageDialog(this, "Insira um tipo de servidor correto.",null,JOptionPane.ERROR_MESSAGE);
             this.tipo_servidor.setText("");
         }
     }//GEN-LAST:event_reserva_pedidoActionPerformed

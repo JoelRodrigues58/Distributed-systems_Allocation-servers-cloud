@@ -19,10 +19,12 @@ public class AtribuirServidores implements Runnable{
         this.totalservidores=totalservidores;
     }
     
+    
     @Override
     public void run() {
         while(true){
             try {
+                
                 String res = this.totalservidores.atribuirServidoresPropostas(nomeServidor);
                 String split[] = res.split("-");
                 String email = split[0];
@@ -33,6 +35,7 @@ public class AtribuirServidores implements Runnable{
                 String licitacao = partirReserva[2];
                 
                 this.utilizadores.adicionarReservas(email, idReserva);
+                
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -44,7 +47,7 @@ public class AtribuirServidores implements Runnable{
                 String notificacoes = sB.toString();
                 
                 this.utilizadores.inserirNotificacoes(email,notificacoes);
-
+                
                  Thread descontarSaldo = new Thread(
                             new DescontaSaldo(
                                     this.utilizadores,

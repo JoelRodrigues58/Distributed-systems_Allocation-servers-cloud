@@ -111,7 +111,7 @@ public class Servidores extends javax.swing.JFrame {
         
         JPanel panel = new JPanel();
         panel.setLocation(50, 100);
-        panel.setSize(450, 200);
+        panel.setSize(445, 160);
         panel.add(scrollPane);
         this.getContentPane().setLayout(null);
         this.getContentPane().add(panel, BorderLayout.CENTER);

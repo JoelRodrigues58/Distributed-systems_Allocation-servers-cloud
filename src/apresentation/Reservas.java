@@ -170,13 +170,13 @@ public class Reservas extends javax.swing.JFrame {
             try {
                 String resultado= this.proxy.terminarReserva("8", idReserva);
                 if(!resultado.equals("IdInvalido")){
-                    JOptionPane.showMessageDialog(null, "Reserva terminada com sucesso.");
+                    JOptionPane.showMessageDialog(this, "Reserva terminada com sucesso.");
                     String res = this.proxy.consultarReservas("7 ");
                     Reservas reservas = new Reservas(proxy,email,res,pos);
                     reservas.setVisible(true);
                     this.setVisible(false);
                 }else{
-                    JOptionPane.showMessageDialog(null, "Id inserido é inválido.");
+                    JOptionPane.showMessageDialog(this, "Id inserido é inválido.",null,JOptionPane.ERROR_MESSAGE);
                     this.idReserva.setText("");
                 }
                 
@@ -185,7 +185,7 @@ public class Reservas extends javax.swing.JFrame {
             }
             
         }else{
-            JOptionPane.showMessageDialog(null, "Insira um ID.");
+            JOptionPane.showMessageDialog(this, "Insira um ID.",null,JOptionPane.ERROR_MESSAGE);
             this.idReserva.setText("");
         }
         

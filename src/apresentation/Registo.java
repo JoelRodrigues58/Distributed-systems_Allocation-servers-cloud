@@ -33,6 +33,7 @@ public class Registo extends javax.swing.JFrame {
         registar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(550, 400));
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         jLabel1.setText("Email:");
@@ -123,7 +124,7 @@ public class Registo extends javax.swing.JFrame {
                     this.setVisible(false);
                 }
                 else{
-                JOptionPane.showMessageDialog(null, "Registo sem sucesso.");
+                JOptionPane.showMessageDialog(this, "Registo sem sucesso.",null,JOptionPane.ERROR_MESSAGE);
                 email.setText("");
                 password.setText("");
                 }
@@ -132,7 +133,7 @@ public class Registo extends javax.swing.JFrame {
                     Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else {
-            JOptionPane.showMessageDialog(null, "Todos os campos são obrigatórios.");
+            JOptionPane.showMessageDialog(this, "Todos os campos são obrigatórios.",null,JOptionPane.ERROR_MESSAGE);
             email.setText("");
             password.setText("");
         }

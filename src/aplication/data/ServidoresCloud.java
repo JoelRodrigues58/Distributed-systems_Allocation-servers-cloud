@@ -27,6 +27,7 @@ public class ServidoresCloud {
     private ReentrantLock lock = new ReentrantLock();
     private int proxId;
     Utilizadores utilizadores;
+
     
     public ServidoresCloud(Utilizadores utilizadores) {
         this.utilizadores= utilizadores;
@@ -61,6 +62,7 @@ public class ServidoresCloud {
             informacao.lockInformacao.unlock();
         }
         proxId++;
+        
     }
 
     /*
@@ -113,6 +115,7 @@ public class ServidoresCloud {
                             if(!servidorCloud.isOcupado()) {
                                 servidorCloud.setOcupado(true);
                                 informacao.servidores_disponiveis--;
+                                System.out.println("(reservaPedido - "+ nomeServidor+") servidores_disponiveis--");
                                 return "1-"+nomeServidor+" "+servidorCloud.getId();
                             }
                     }
@@ -160,7 +163,7 @@ public class ServidoresCloud {
                 double licitMin;
                 
                 licitMin = servidorClouds.get(0).getLicitacaoMinima();
-                if(licitacao < licitMin) return "LicitacaoBaixa";
+                if(licitacao < licitMin) return "LicitacaoBaixa "+licitMin;
                 
                 for(ServidorCloud servidorCloud : servidorClouds){
                     if(!servidorCloud.isOcupado()) {
@@ -168,6 +171,7 @@ public class ServidoresCloud {
                         servidorCloud.setLeilao(true);
                         servidorCloud.setOcupado(true);
                         informacao.servidores_disponiveis--;
+                        //System.out.println("(reservaLeilao - "+ nomeServidor+") servidores_disponiveis--");
                         return nomeServidor+" "+servidorCloud.getId();
                     }
                 }
@@ -210,6 +214,7 @@ public class ServidoresCloud {
         }
         propostas.add(proposta);
         informacao.not_Servidores_or_Propostas.signal();
+        //System.out.println("(registarProposta) proposta.size++");//VERIFICAR ALL OU NAO
     } 
     
     /*
@@ -315,16 +320,19 @@ public class ServidoresCloud {
                 }
             }
             informacao.servidores_disponiveis++;
-            informacao.not_Servidores_or_Propostas.signal();
+            //System.out.println("(desocupaServidor -"+ nomeServidor+") servidores_disponiveis++");
+            informacao.not_Servidores_or_Propostas.signal(); // NOTIFICAR QUANDO HA SERVERES DIPONVEIS
         }finally{
             informacao.lockInformacao.unlock();
         }
     }
     
+    
     /*
       Função utilizada como argumento na função desocupaServidor, pois, dado um
         id de reserva, retorna o seu tipo de servidor (argumento na função anterior)
     */
+    //TIRAR PARTIDO DO ID do servidor (mudar interface??)
     public String servidorPorId(int id){
         this.lock.lock();
         try{
@@ -382,6 +390,15 @@ public class ServidoresCloud {
         }
     }
     
+    /*
+    public int servidoresDisponiveis(ArrayList<ServidorCloud> servidores){
+        int s_disponiveis=0;
+        for(ServidorCloud sC : servidores){
+            if(!sC.isOcupado()) s_disponiveis++;
+        }
+        return s_disponiveis;
+    }*/
+    
     // Servidor -> ocupado; Eliminar Proposta escolhida; Adicionar reserva a cliente. 
     public String atualizaInformacao(Informacao informacao){
         double licitacao=0;
@@ -393,7 +410,7 @@ public class ServidoresCloud {
             if(!sC.isOcupado()) {
                 sC.setOcupado(true);
                 sC.setLeilao(true);
-                informacao.servidores_disponiveis--; 
+                informacao.servidores_disponiveis--; //ESTAVA A FALTAR ISTO!!
                 servidorEscolhido=sC;
             }
         }
@@ -412,24 +429,35 @@ public class ServidoresCloud {
         
     }
     
+   
+    
     /*
       Se houver servidores disponiveis, segundo um tipo de servidor, e propostas
         existentes para esse tipo de servidor, efetua a função atualizaInformação
         (pôr o servidor a ocupado, eliminar a proposta e fazer a reserva para um cliente)
         Caso contrario, adormece
     */
+    
+    
     public String atribuirServidoresPropostas(String nomeServidor) throws InterruptedException{
         String res=null;
         this.lock.lock();
         Informacao informacao = this.informacao.get(nomeServidor);
         informacao.lockInformacao.lock();
+        //ArrayList<ServidorCloud> servidores = informacao.servidores;
+        //ArrayList<Proposta> propostas = informacao.propostas;
         this.lock.unlock();
         try{ 
              while((informacao.servidores_disponiveis==0) || (informacao.propostas.size()==0)){
-                System.out.println("À espera servidores ou propostas...");
+                // System.out.println("[dentro] servidores disponiveis ("+nomeServidor+")= "+informacao.servidores_disponiveis);
+                // System.out.println("[dentro] propostas size ("+nomeServidor+")=  "+informacao.propostas.size());
+                // System.out.println("Estou a dormir não ha servidores");
                 informacao.not_Servidores_or_Propostas.await(); 
             }
-            System.out.println("A atribuir servidores disponíveis a propostas existentes...");        
+             //System.out.println("[fora] servidores disponiveis = "+informacao.servidores_disponiveis);
+             //System.out.println("[fora] propostas size = "+informacao.propostas.size());
+             //System.out.println("Acordei... há propostas e servidores");
+            
             res = atualizaInformacao(informacao);
             return res;
         }finally{

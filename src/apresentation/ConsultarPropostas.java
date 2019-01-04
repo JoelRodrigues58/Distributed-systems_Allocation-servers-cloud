@@ -128,10 +128,10 @@ public class ConsultarPropostas extends javax.swing.JFrame {
                     consultarproposta.setVisible(true);
                 }
                 else if(propostas.equals("Naohapropostas")){
-                    JOptionPane.showMessageDialog(null, "Não existem propostas para esse servidor");
+                    JOptionPane.showMessageDialog(this, "Não existem propostas para esse servidor",null,JOptionPane.WARNING_MESSAGE);
                     this.servidor.setText("");
                 }else {
-                    JOptionPane.showMessageDialog(null, "Insira um tipo de servidor correto.");
+                    JOptionPane.showMessageDialog(this, "Insira um tipo de servidor correto.",null,JOptionPane.ERROR_MESSAGE);
                     this.servidor.setText("");
                 } 
             } catch (IOException ex) {
