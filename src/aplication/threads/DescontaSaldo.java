@@ -8,6 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import aplication.data.ServidoresCloud;
 import aplication.data.Utilizadores;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class DescontaSaldo implements Runnable{
     private Utilizadores utilizadores;
@@ -44,7 +46,20 @@ public class DescontaSaldo implements Runnable{
                 if(resultado.equals("SemSaldo")){
                     terminado=true;
                     this.servidores.desocupaServidor(nomeServidor,Integer.parseInt(idServidor[1]));
-                    this.utilizadores.retiraReserva(email,idReserva);
+                    String idServer[] = idReserva.split(" ");
+                    this.utilizadores.retiraReserva(email,idServer[1]);
+                    
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                    StringBuilder sB = new StringBuilder();
+                    sB.append("$Foi-lhe retirada a reserva com o ID "+idServidor[1]);
+                    sB.append(", devido à falta de saldo na sua conta.");
+                    sB.append(" ( Data = "+ sdf.format(timestamp) +" )");
+                    String notificacoes = sB.toString();
+                
+                    this.utilizadores.inserirNotificacoes(email,notificacoes);
+                
                 }else if(resultado.equals("SemReserva")){
                     terminado=true;
                 }

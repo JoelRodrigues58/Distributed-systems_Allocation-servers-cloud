@@ -444,19 +444,14 @@ public class ServidoresCloud {
         this.lock.lock();
         Informacao informacao = this.informacao.get(nomeServidor);
         informacao.lockInformacao.lock();
-        //ArrayList<ServidorCloud> servidores = informacao.servidores;
-        //ArrayList<Proposta> propostas = informacao.propostas;
+
         this.lock.unlock();
         try{ 
              while((informacao.servidores_disponiveis==0) || (informacao.propostas.size()==0)){
-                // System.out.println("[dentro] servidores disponiveis ("+nomeServidor+")= "+informacao.servidores_disponiveis);
-                // System.out.println("[dentro] propostas size ("+nomeServidor+")=  "+informacao.propostas.size());
-                // System.out.println("Estou a dormir não ha servidores");
+                System.out.println("À espera servidores ou propostas...");
                 informacao.not_Servidores_or_Propostas.await(); 
             }
-             //System.out.println("[fora] servidores disponiveis = "+informacao.servidores_disponiveis);
-             //System.out.println("[fora] propostas size = "+informacao.propostas.size());
-             //System.out.println("Acordei... há propostas e servidores");
+                System.out.println("A atribuir servidores disponíveis a propostas existentes...");
             
             res = atualizaInformacao(informacao);
             return res;

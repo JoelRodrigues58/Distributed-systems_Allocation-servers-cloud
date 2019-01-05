@@ -197,7 +197,7 @@ public class Utilizadores {
 
             if(reservas!=null){
                 for(String res : reservas){
-                    String[] id = res.split(" ");
+                    String[] id = res.split(" "); 
                     if(id[1].equals(idReserva)) {
                         reservas.remove(res);
                         return "Ok";

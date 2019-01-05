@@ -25,8 +25,7 @@ public class ServidorSkeleton {
             
         } else serverM = "Not Ok";
 
-        if(serverM.equals("Not Ok")) return "Erro";
-        else return email;
+       return serverM;
         
     }
     
@@ -38,9 +37,8 @@ public class ServidorSkeleton {
         if (login) {
             serverM = "Ok";
         } else serverM = "Not Ok";
-
-        if(serverM.equals("Not Ok")) return "Erro";
-        else return email;
+        
+        return serverM;
 
     }
     
@@ -52,7 +50,7 @@ public class ServidorSkeleton {
             idReserva = this.servidoresCloud.reservarPedido(nomeServidor);
 
             if(idReserva!=null && !idReserva.equals("ServidorInexistente") && !idReserva.equals("TodosServidoresIndisponiveis")) {
-                String[] split = idReserva.split("-");
+                String[] split = idReserva.split("-"); 
                 if (split[0].equals("2")) {
                     String emailRemover = this.utilizadores.verificarReserva(split[1]);
                     //MANDAR NOTIFICAÇÃO
@@ -156,10 +154,10 @@ public class ServidorSkeleton {
         return this.utilizadores.consultarReservas(email);
     }
     
-    public String retiraReserva(String email, String msgAut){
+    public String retiraReserva(String email, String idReserva){
         String serverM;
-        String res = this.utilizadores.retiraReserva(email, msgAut);
-        int id = Integer.parseInt(msgAut);
+        String res = this.utilizadores.retiraReserva(email, idReserva);
+        int id = Integer.parseInt(idReserva);
             if(!res.equals("IdInvalido") && !res.equals("NaoTemReservas")){
                 this.servidoresCloud.desocupaServidor(this.servidoresCloud.servidorPorId(id), id);
                 serverM="Ok";

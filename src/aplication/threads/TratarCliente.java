@@ -44,10 +44,10 @@ public class TratarCliente implements Runnable {
                             email_inserido = msg[1];
                             password = msg[2];
                             resultado = servidorSkeleton.efetuarRegisto(email_inserido,password);
-                            if(resultado.equals("Erro")) serverM="Not Ok";
+                            if(resultado.equals("Not Ok")) serverM="Not Ok";
                             else {
                                 serverM="Ok";
-                                this.email=resultado;
+                                this.email=email_inserido;
                                 this.autenticado = true;
                             }
                             out.write(serverM);
@@ -61,10 +61,10 @@ public class TratarCliente implements Runnable {
                             email_inserido = msg[1];
                             password = msg[2];
                             resultado = servidorSkeleton.efetuarLogin(email_inserido,password);
-                            if(resultado.equals("Erro")) serverM="Not Ok";
+                            if(resultado.equals("Not Ok")) serverM="Not Ok";
                             else {
                                 serverM="Ok";
-                                this.email=resultado;
+                                this.email=email_inserido;
                                 this.autenticado = true;
                             }
                             out.write(serverM);
