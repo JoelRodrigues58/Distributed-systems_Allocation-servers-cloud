@@ -4,14 +4,6 @@ import presentation.MenuInicial;
 import java.io.*;
 import java.net.Socket;
 
-import static com.sun.javafx.util.Utils.split;
-import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
 import presentation.Posicao;
 import java.util.ArrayList;
 
@@ -66,7 +58,7 @@ public class Cliente {
             posicoes.add(new Posicao(550,400));
 
             try{
-                posicao = Integer.parseInt(args[0]);
+                posicao = Integer.parseInt("1");
                 if(posicao>4 || posicao<1){
                     System.out.println("Insira um número inteiro de 1 a 4.");
                 }else{

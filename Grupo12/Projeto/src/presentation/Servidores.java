@@ -2,10 +2,6 @@
 package presentation;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Point;
-import javafx.scene.control.ScrollPane;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
