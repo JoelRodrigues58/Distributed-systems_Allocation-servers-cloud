@@ -58,14 +58,14 @@ public class Cliente {
             posicoes.add(new Posicao(550,400));
 
             try{
-                posicao = Integer.parseInt("1");
+                posicao = Integer.parseInt(args[0]);
                 if(posicao>4 || posicao<1){
                     System.out.println("Insira um número inteiro de 1 a 4.");
                 }else{
                     Cliente cliente = new Cliente(endereco,porta,posicoes.get(posicao-1));
                     cliente.comecaCliente();
                 }
-            }catch(NumberFormatException e){
+            }catch(NumberFormatException | ArrayIndexOutOfBoundsException e){
                 System.out.println("Insira um número inteiro de 1 a 4.");
             }
             

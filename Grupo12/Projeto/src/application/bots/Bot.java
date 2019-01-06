@@ -100,7 +100,7 @@ public static final String ANSI_RESET = "\u001B[0m";
                     case 8:
                         // Terminar reserva
                         System.out.println(cor+Thread.currentThread().getName()+" a efetuar: Terminar reserva."+ ANSI_RESET);
-                        idReserva = ""+r.nextInt(4);
+                        idReserva = ""+r.nextInt(12);
                         System.out.println(cor+"\t> Id de Reserva inserido: "+idReserva);
                         resposta = this.proxy.terminarReserva("8",idReserva);
                         System.out.println(cor+"\n"+ ANSI_RESET);

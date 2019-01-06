@@ -22,17 +22,22 @@ public static final String ANSI_CYAN = "\u001B[36m";*/
         cores.add("\033[1;36m");
 
         
-        int nBots = 10;
+        int nBots = 0;
         
-        System.out.println("=================BOTS====================");
+        try{
+            nBots = Integer.parseInt(args[0]);
+            System.out.println("=================BOTS====================");
             System.out.println(cores.size());
-        int y=0;
-        for(int i=0; i< nBots; i++){
-            Bot bot = new Bot(endereco,porta,i+1,cores.get(y));
-            Thread botThread = new Thread(bot);
-            botThread.setName("Bot "+(i+1));
-            botThread.start();
-            if(y+1==cores.size()){y=0;}else y++;
+            int y=0;
+            for(int i=0; i< nBots; i++){
+                Bot bot = new Bot(endereco,porta,i+1,cores.get(y));
+                Thread botThread = new Thread(bot);
+                botThread.setName("Bot "+(i+1));
+                botThread.start();
+                if(y+1==cores.size()){y=0;}else y++;
+            }
+        }catch(NumberFormatException | ArrayIndexOutOfBoundsException e){
+            System.out.println("Insira o número de bots pretendido.");
         }
         
     }
