@@ -1,5 +1,5 @@
 # Sistemas Distribuídos - Alocação de servidores na nuvem
-Projeto Sistemas Distribuídos 2017/2018, Mestrado Integrado em Engenharia Informática, Universidade do Minho, Braga - Portugal
+Projeto Sistemas Distribuídos 2018/2019, Mestrado Integrado em Engenharia Informática, Universidade do Minho, Braga - Portugal
 
 Neste projeto pretende-se desenvolver um serviço de alocação de servidores na nuvem e de contabilização do custo incorrido pelos utilizadores.
 
