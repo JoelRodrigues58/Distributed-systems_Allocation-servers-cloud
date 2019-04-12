@@ -32,6 +32,9 @@ Na diretoria principal execute os seguintes passos:
 ### Arquitetura final
 
 ![Screenshot1](arquitetura.png)
+
+### Interface da aplicação
+
 ![Screenshot2](interface.png)
 
 ## Autores
