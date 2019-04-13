@@ -1,7 +1,14 @@
 # Sistemas Distribuídos - Alocação de servidores na nuvem
 Projeto Sistemas Distribuídos 2018/2019, Mestrado Integrado em Engenharia Informática, Universidade do Minho, Braga - Portugal
 
-Neste projeto pretende-se desenvolver um serviço de alocação de servidores na nuvem e de contabilização do custo incorrido pelos utilizadores.
+Neste projeto pretende-se desenvolver um serviço de alocação de servidores na nuvem e de gestão de recursos similar às plataformas Google Cloud e a Amazon EC2. De entre várias funcionalidades do sistema, destacam-se:
+
+- Autenticação e registo de utilizador;
+- Reservar um servidor a pedido;
+- Reservar uma instância em leilão;
+- Libertar um servidor;
+- Consultar a sua conta corrente;
+
 
 ### Como executar o projeto:
 
